@@ -174,8 +174,6 @@ app.post('/auth/refresh', async (req, res) => {
     }
 });
 
-const { spawn } = require('child_process');
-
 // Get athlete's activities - USES STORED DATA (no Strava API call needed!)
 app.get('/api/activities', async (req, res) => {
     // Check if this user has a session with activities
