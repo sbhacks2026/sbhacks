@@ -25,4 +25,10 @@ class StravaApp:
 token = sys.argv[1] if len(sys.argv) > 1 else None
 app = StravaApp(token)
 activities = app.get_walking_activities()
-activities.to_json('strava_data.json')
+
+if hasattr(activities, 'to_dict'):
+    output = activities.to_dict()
+else:
+    output = {"error": "Could not convert activities to dict"}
+
+print(json.dumps(output))
