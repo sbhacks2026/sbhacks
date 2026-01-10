@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strava OAuth Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #fc4c02 0%, #ff6b35 100%);
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .strava-button {
+            background-color: #fc4c02;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        
+        .strava-button:hover {
+            background-color: #e04402;
+        }
+        
+        .strava-button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Strava Connect</h1>
+        <p>Connect your Strava account to get started</p>
+        <button class="strava-button" onclick="loginWithStrava()">
+            Login with Strava
+        </button>
+    </div>
+
+    <script>
+        function loginWithStrava() {
+            // Get client ID from server
+            fetch('/auth/config')
+                .then(response => response.json())
+                .then(config => {
+                    const clientId = config.clientId;
+                    const redirectUri = config.redirectUri;
+                    const scope = 'read,activity:read_all'; // Adjust scopes as needed
+                    
+                    // Construct the authorization URL
+                    const authUrl = `https://www.strava.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+                    
+                    // Redirect to Strava
+                    window.location.href = authUrl;
+                })
+                .catch(error => {
+                    console.error('Error fetching config:', error);
+                    alert('Error connecting to server. Please try again.');
+                });
+        }
+    </script>
+</body>
+</html>

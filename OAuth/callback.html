@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strava - Authorizing...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #fc4c02 0%, #ff6b35 100%);
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #fc4c02;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success {
+            color: #28a745;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: #dc3545;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .info {
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loading">
+            <div class="spinner"></div>
+            <p>Connecting to Strava...</p>
+        </div>
+        <div id="result" style="display: none;">
+            <div id="message"></div>
+            <div id="details"></div>
+        </div>
+    </div>
+
+    <script>
+        // Get the authorization code from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+
+        if (error) {
+            showError('Authorization denied: ' + error);
+        } else if (code) {
+            // Exchange code for access token
+            exchangeCodeForToken(code);
+        } else {
+            showError('No authorization code received');
+        }
+
+        async function exchangeCodeForToken(code) {
+            try {
+                const response = await fetch('/auth/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showSuccess(data);
+                } else {
+                    showError(data.error || 'Failed to exchange token');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            }
+        }
+
+        function showSuccess(data) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = 'success';
+            messageDiv.textContent = '✓ Successfully connected to Strava!';
+            
+            const detailsDiv = document.getElementById('details');
+            detailsDiv.innerHTML = `
+                <p class="info">Athlete: ${data.athlete.firstname} ${data.athlete.lastname}</p>
+                <p class="info">Username: ${data.athlete.username}</p>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+                <p style="margin-top: 20px;">
+                    <a href="/" style="color: #fc4c02; text-decoration: none; font-weight: bold;">← Back to Home</a>
+                </p>
+            `;
+        }
+
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = 'error';
+            messageDiv.textContent = '✗ ' + message;
+            
+            const detailsDiv = document.getElementById('details');
+            detailsDiv.innerHTML = `
+                <p style="margin-top: 20px;">
+                    <a href="/" style="color: #fc4c02; text-decoration: none; font-weight: bold;">← Try Again</a>
+                </p>
+            `;
+        }
+    </script>
+</body>
+</html>
