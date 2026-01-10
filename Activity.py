@@ -28,14 +28,14 @@ class Activity:
             "name ": self.name,
             "id": self.id,
             "start_date": self.date,
-            "distance (meters)": self.distance,
-            "total_elevation_gain (meters)": self.elevation,
+            "distance (miles)": self.get_distance_in_miles(),
+            "total_elevation_gain (feet)": self.get_elevation_gain_in_feet(),
             "sport_type": self.sport_type,
             "average_speed": self.get_speed_with_units(),
-            "elapsed_time (sec)": self.elapsed_time,
+            "elapsed_time (Hours:Minutes:Seconds)": self.get_elapsed_time_formatted(),
             "start_latlng": self.location,
-            "elev_low (meters)": self.elev_low,
-            "elev_high (meters)": self.elev_high
+            "elev_low (feet)": self.get_elev_low_in_feet(),
+            "elev_high (feet)": self.get_elev_high_in_feet()
         }
     
     def get_speed_with_units(self):
@@ -66,6 +66,43 @@ class Activity:
         else:
             # Default fallback for other sport types
             return f"{self.avg_speed:.2f} m/s"
+
+    def get_distance_in_miles(self):
+        """Convert distance from meters to miles"""
+        if self.distance is None:
+            return "N/A"
+        miles = self.distance / 1609.34
+        return f"{miles:.2f} miles"
+
+    def get_elevation_gain_in_feet(self):
+        """Convert elevation gain from meters to feet"""
+        if self.elevation is None:
+            return "N/A"
+        feet = self.elevation * 3.28084
+        return f"{feet:.2f} feet"
+
+    def get_elev_low_in_feet(self):
+        """Convert low elevation from meters to feet"""
+        if self.elev_low is None:
+            return "N/A"
+        feet = self.elev_low * 3.28084
+        return f"{feet:.2f} feet"
+
+    def get_elev_high_in_feet(self):
+        """Convert high elevation from meters to feet"""
+        if self.elev_high is None:
+            return "N/A"
+        feet = self.elev_high * 3.28084
+        return f"{feet:.2f} feet"
+
+    def get_elapsed_time_formatted(self):
+        """Convert elapsed time from seconds to HH:MM:SS format"""
+        if self.elapsed_time is None:
+            return "N/A"
+        hours = int(self.elapsed_time // 3600)
+        minutes = int((self.elapsed_time % 3600) // 60)
+        seconds = int(self.elapsed_time % 60)
+        return f"{hours}:{minutes:02d}:{seconds:02d}"
 
 
 class ActivityContainer:

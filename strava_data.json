@@ -3,208 +3,208 @@
         "name ": "Brainrot Break",
         "id": 16906993438,
         "start_date": "2026-01-01T21:27:47Z",
-        "distance (meters)": 5492.7,
-        "total_elevation_gain (meters)": 11.5,
+        "distance (miles)": "3.41 miles",
+        "total_elevation_gain (feet)": "37.73 feet",
         "sport_type": "Run",
         "average_speed": "8:51 min/mile",
-        "elapsed_time (sec)": 1832,
+        "elapsed_time (Hours:Minutes:Seconds)": "0:30:32",
         "start_latlng": [
             38.898752,
             -121.319051
         ],
-        "elev_low (meters)": 40.2,
-        "elev_high (meters)": 45.0
+        "elev_low (feet)": "131.89 feet",
+        "elev_high (feet)": "147.64 feet"
     },
     {
         "name ": "West Cliff Run",
         "id": 16857377399,
         "start_date": "2025-12-27T17:55:06Z",
-        "distance (meters)": 9065.8,
-        "total_elevation_gain (meters)": 32.1,
+        "distance (miles)": "5.63 miles",
+        "total_elevation_gain (feet)": "105.31 feet",
         "sport_type": "Run",
         "average_speed": "8:49 min/mile",
-        "elapsed_time (sec)": 3856,
+        "elapsed_time (Hours:Minutes:Seconds)": "1:04:16",
         "start_latlng": [
             36.970492,
             -122.041303
         ],
-        "elev_low (meters)": 7.1,
-        "elev_high (meters)": 30.1
+        "elev_low (feet)": "23.29 feet",
+        "elev_high (feet)": "98.75 feet"
     },
     {
         "name ": "New Shoes!!",
         "id": 16839677851,
         "start_date": "2025-12-25T21:02:45Z",
-        "distance (meters)": 5009.3,
-        "total_elevation_gain (meters)": 15.3,
+        "distance (miles)": "3.11 miles",
+        "total_elevation_gain (feet)": "50.20 feet",
         "sport_type": "Run",
         "average_speed": "8:54 min/mile",
-        "elapsed_time (sec)": 1696,
+        "elapsed_time (Hours:Minutes:Seconds)": "0:28:16",
         "start_latlng": [
             36.968619,
             -121.973129
         ],
-        "elev_low (meters)": 4.4,
-        "elev_high (meters)": 17.0
+        "elev_low (feet)": "14.44 feet",
+        "elev_high (feet)": "55.77 feet"
     },
     {
         "name ": "Morrrrbing",
         "id": 16242804467,
         "start_date": "2025-10-24T15:15:19Z",
-        "distance (meters)": 5062.5,
-        "total_elevation_gain (meters)": 13.2,
+        "distance (miles)": "3.15 miles",
+        "total_elevation_gain (feet)": "43.31 feet",
         "sport_type": "Run",
         "average_speed": "9:16 min/mile",
-        "elapsed_time (sec)": 1763,
+        "elapsed_time (Hours:Minutes:Seconds)": "0:29:23",
         "start_latlng": [
             34.411522,
             -119.858757
         ],
-        "elev_low (meters)": 3.4,
-        "elev_high (meters)": 16.6
+        "elev_low (feet)": "11.15 feet",
+        "elev_high (feet)": "54.46 feet"
     },
     {
         "name ": "Run/Walk",
         "id": 15892248399,
         "start_date": "2025-09-21T18:36:00Z",
-        "distance (meters)": 6218.3,
-        "total_elevation_gain (meters)": 31.3,
+        "distance (miles)": "3.86 miles",
+        "total_elevation_gain (feet)": "102.69 feet",
         "sport_type": "Run",
         "average_speed": "9:55 min/mile",
-        "elapsed_time (sec)": 2615,
+        "elapsed_time (Hours:Minutes:Seconds)": "0:43:35",
         "start_latlng": [
             36.96748,
             -121.973247
         ],
-        "elev_low (meters)": 3.8,
-        "elev_high (meters)": 23.7
+        "elev_low (feet)": "12.47 feet",
+        "elev_high (feet)": "77.76 feet"
     },
     {
         "name ": "Calm luh backpack",
         "id": 15815375740,
         "start_date": "2025-09-13T22:00:44Z",
-        "distance (meters)": 18924.6,
-        "total_elevation_gain (meters)": 620.3,
+        "distance (miles)": "11.76 miles",
+        "total_elevation_gain (feet)": "2035.11 feet",
         "sport_type": "Hike",
-        "average_speed": "2.25 mph",
-        "elapsed_time (sec)": 87027,
+        "average_speed": "26:38 min/mile",
+        "elapsed_time (Hours:Minutes:Seconds)": "24:10:27",
         "start_latlng": [
             36.710942,
             -118.816872
         ],
-        "elev_low (meters)": 2403.0,
-        "elev_high (meters)": 2794.9
+        "elev_low (feet)": "7883.86 feet",
+        "elev_high (feet)": "9169.62 feet"
     },
     {
         "name ": "Finished work before bedtime \ud83e\udd73",
         "id": 15747300720,
         "start_date": "2025-09-09T03:12:28Z",
-        "distance (meters)": 4670.0,
-        "total_elevation_gain (meters)": 5.9,
+        "distance (miles)": "2.90 miles",
+        "total_elevation_gain (feet)": "19.36 feet",
         "sport_type": "Run",
         "average_speed": "7:54 min/mile",
-        "elapsed_time (sec)": 1377,
+        "elapsed_time (Hours:Minutes:Seconds)": "0:22:57",
         "start_latlng": [
             34.41169,
             -119.859065
         ],
-        "elev_low (meters)": 11.1,
-        "elev_high (meters)": 17.1
+        "elev_low (feet)": "36.42 feet",
+        "elev_high (feet)": "56.10 feet"
     },
     {
         "name ": "Zion Narrows Shuttle Service",
         "id": 15495334966,
         "start_date": "2025-08-17T14:16:36Z",
-        "distance (meters)": 22042.4,
-        "total_elevation_gain (meters)": 504.6,
+        "distance (miles)": "13.70 miles",
+        "total_elevation_gain (feet)": "1655.51 feet",
         "sport_type": "Hike",
-        "average_speed": "2.59 mph",
-        "elapsed_time (sec)": 24020,
+        "average_speed": "23:10 min/mile",
+        "elapsed_time (Hours:Minutes:Seconds)": "6:40:20",
         "start_latlng": [
             37.379327,
             -112.844196
         ],
-        "elev_low (meters)": 1582.8,
-        "elev_high (meters)": 1788.6
+        "elev_low (feet)": "5192.91 feet",
+        "elev_high (feet)": "5868.11 feet"
     },
     {
         "name ": "Mt. Shasta",
         "id": 15405737496,
         "start_date": "2025-08-09T13:03:58Z",
-        "distance (meters)": 15363.3,
-        "total_elevation_gain (meters)": 1539.8,
+        "distance (miles)": "9.55 miles",
+        "total_elevation_gain (feet)": "5051.84 feet",
         "sport_type": "Hike",
-        "average_speed": "2.02 mph",
-        "elapsed_time (sec)": 51263,
+        "average_speed": "29:38 min/mile",
+        "elapsed_time (Hours:Minutes:Seconds)": "14:14:23",
         "start_latlng": [
             41.391235,
             -122.170635
         ],
-        "elev_low (meters)": 1972.9,
-        "elev_high (meters)": 4305.3
+        "elev_low (feet)": "6472.77 feet",
+        "elev_high (feet)": "14125.00 feet"
     },
     {
         "name ": "Campus Point Hill Repeats",
         "id": 15346766721,
         "start_date": "2025-08-04T23:23:18Z",
-        "distance (meters)": 4129.1,
-        "total_elevation_gain (meters)": 74.2,
+        "distance (miles)": "2.57 miles",
+        "total_elevation_gain (feet)": "243.44 feet",
         "sport_type": "Run",
         "average_speed": "13:01 min/mile",
-        "elapsed_time (sec)": 2266,
+        "elapsed_time (Hours:Minutes:Seconds)": "0:37:46",
         "start_latlng": [
             34.406247,
             -119.844092
         ],
-        "elev_low (meters)": 4.0,
-        "elev_high (meters)": 10.9
+        "elev_low (feet)": "13.12 feet",
+        "elev_high (feet)": "35.76 feet"
     },
     {
         "name ": "Hill Repeats Rd 2 (with the boys)",
         "id": 15257162281,
         "start_date": "2025-07-27T17:33:35Z",
-        "distance (meters)": 17840.3,
-        "total_elevation_gain (meters)": 302.4,
+        "distance (miles)": "11.09 miles",
+        "total_elevation_gain (feet)": "992.13 feet",
         "sport_type": "Run",
         "average_speed": "9:11 min/mile",
-        "elapsed_time (sec)": 7143,
+        "elapsed_time (Hours:Minutes:Seconds)": "1:59:03",
         "start_latlng": [
             34.416668,
             -119.833631
         ],
-        "elev_low (meters)": 3.2,
-        "elev_high (meters)": 15.7
+        "elev_low (feet)": "10.50 feet",
+        "elev_high (feet)": "51.51 feet"
     },
     {
         "name ": "Hill Repeats",
         "id": 15236437377,
         "start_date": "2025-07-25T23:28:28Z",
-        "distance (meters)": 5976.8,
-        "total_elevation_gain (meters)": 128.9,
+        "distance (miles)": "3.71 miles",
+        "total_elevation_gain (feet)": "422.90 feet",
         "sport_type": "Run",
         "average_speed": "9:30 min/mile",
-        "elapsed_time (sec)": 2267,
+        "elapsed_time (Hours:Minutes:Seconds)": "0:37:47",
         "start_latlng": [
             34.411621,
             -119.859204
         ],
-        "elev_low (meters)": 3.8,
-        "elev_high (meters)": 14.0
+        "elev_low (feet)": "12.47 feet",
+        "elev_high (feet)": "45.93 feet"
     },
     {
         "name ": "Horrible Terrible Nightmare Hike",
         "id": 15106709780,
         "start_date": "2025-07-13T22:14:23Z",
-        "distance (meters)": 15062.3,
-        "total_elevation_gain (meters)": 1129.6,
+        "distance (miles)": "9.36 miles",
+        "total_elevation_gain (feet)": "3706.04 feet",
         "sport_type": "Hike",
-        "average_speed": "2.82 mph",
-        "elapsed_time (sec)": 19508,
+        "average_speed": "21:18 min/mile",
+        "elapsed_time (Hours:Minutes:Seconds)": "5:25:08",
         "start_latlng": [
             34.462364,
             -119.711149
         ],
-        "elev_low (meters)": 265.0,
-        "elev_high (meters)": 1208.7
+        "elev_low (feet)": "869.42 feet",
+        "elev_high (feet)": "3965.55 feet"
     }
 ]
