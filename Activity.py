@@ -43,6 +43,14 @@ class ActivityContainer:
     def __str__(self):
         return "".join(str(activity) for activity in self.activities)
 
+    # maybe?
     def to_json(self, filename):
         with open(filename, 'w') as f:
             json.dump([activity.to_dict() for activity in self.activities], f, indent=4)
+
+    # Things we need:
+    # How long ago they did the activity
+    # Distance 
+    # Elevation gain
+    # Went up to max elevation
+    # It took elapsed time
