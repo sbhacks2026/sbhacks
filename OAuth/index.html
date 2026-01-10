@@ -12,7 +12,10 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #fc4c02 0%, #ff6b35 100%);
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         
         .container {
@@ -59,7 +62,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Strava Connect</h1>
+        <h1>Welcome to RouteWise</h1>
         <p>Connect your Strava account to get started</p>
         <button class="strava-button" onclick="loginWithStrava()">
             Login with Strava
