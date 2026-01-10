@@ -199,7 +199,7 @@ app.get('/api/activities', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Error running Python script:', error.message);
+        console.error('Error running Python script:', error.message);
         res.status(500).json({ 
             error: 'Failed to run analysis',
             details: error.message 
