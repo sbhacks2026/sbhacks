@@ -21,6 +21,7 @@ class HikingTrailHandler(osmium.SimpleHandler):
             self.ways[w.id] = {
                 'coords': coords,
                 'tags': tags
+            }
     
     def relation(self, r):
         # Only process hiking route relations
