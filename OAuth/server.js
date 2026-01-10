@@ -30,6 +30,8 @@ app.get('/auth/config', (req, res) => {
     });
 });
 
+const { spawn } = require('child_process');
+
 app.post('/auth/token', async (req, res) => {
     const { code } = req.body;
 
@@ -51,27 +53,52 @@ app.post('/auth/token', async (req, res) => {
         
         console.log('✅ User authenticated:', data.athlete.username);
         
-        // IMMEDIATELY fetch their activities while token is valid
+        // CALL PYTHON SCRIPT to fetch activities
         let activities = [];
         try {
-            const activitiesResponse = await axios.get(
-                'https://www.strava.com/api/v3/athlete/activities',
-                {
-                    headers: { 'Authorization': `Bearer ${accessToken}` },
-                    params: { per_page: 100 }
-                }
-            );
-            activities = activitiesResponse.data;
-            console.log(`✅ Fetched ${activities.length} activities`);
-        } catch (actError) {
-            console.error('⚠️ Error fetching activities:', actError.message);
+            console.log('🔵 Calling stravaApp.py to fetch activities...');
+            
+            const python = spawn('python3', [
+                'stravaApp.py',
+                accessToken  // Pass token to Python
+            ]);
+
+            let pythonOutput = '';
+            let pythonError = '';
+
+            python.stdout.on('data', (chunk) => {
+                pythonOutput += chunk.toString();
+            });
+
+            python.stderr.on('data', (chunk) => {
+                pythonError += chunk.toString();
+            });
+
+            // Wait for Python to finish
+            await new Promise((resolve, reject) => {
+                python.on('close', (code) => {
+                    if (code !== 0) {
+                        console.error('❌ Python error:', pythonError);
+                        reject(new Error(pythonError));
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+
+            // Parse the JSON returned by Python
+            activities = JSON.parse(pythonOutput);
+            console.log(`✅ Python fetched ${activities.length} activities`);
+            
+        } catch (fetchError) {
+            console.error('⚠️ Error running Python script:', fetchError.message);
             // Continue anyway - we'll store empty array
         }
         
         // Store user data AND activities in session
         req.session.user = {
             athlete: data.athlete,
-            activities: activities,  // Store the fetched activities!
+            activities: activities,
             expires_at: data.expires_at
         };
         

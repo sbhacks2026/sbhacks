@@ -1,6 +1,7 @@
 import json
 import requests
 import Activity 
+import sys
 
 class StravaApp:
     def __init__(self, token : str):
@@ -21,7 +22,7 @@ class StravaApp:
 
         return Activity.ActivityContainer(filtered_activities)
     
-app = StravaApp(sys.arg1)
+token = sys.argv[1] if len(sys.argv) > 1 else None
+app = StravaApp(token)
 activities = app.get_walking_activities()
-print(activities)
 activities.to_json('strava_data.json')
