@@ -30,7 +30,7 @@ app.get('/auth/config', (req, res) => {
     });
 });
 
-// Token exchange endpoint - NOW STORES PER USER
+// Token exchange endpoint - GET TOKEN THEN KICK USER OUT
 app.post('/auth/token', async (req, res) => {
     const { code } = req.body;
 
@@ -58,6 +58,18 @@ app.post('/auth/token', async (req, res) => {
         };
         
         console.log('User authenticated:', data.athlete.username, '- Session ID:', req.sessionID);
+        
+        // IMMEDIATELY deauthorize from Strava (frees up the slot!)
+        try {
+            await axios.post('https://www.strava.com/oauth/deauthorize', null, {
+                headers: {
+                    'Authorization': `Bearer ${data.access_token}`
+                }
+            });
+            console.log('User deauthorized from Strava (freed up slot for next user)');
+        } catch (deauthError) {
+            console.log('Error deauthorizing:', deauthError.message);
+        }
         
         res.json({
             athlete: data.athlete,
@@ -192,3 +204,4 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log(`Make sure to set your Strava callback URL to: ${process.env.CALLBACK_URL || `http://localhost:${PORT}/callback`}`);
 });
+
