@@ -1,16 +1,16 @@
 from google import genai
-import json
+#import json
 
+# Enter Gemini API key below
+user_key = "AIzaSyDnFur1AGpaw-grKbouOiaiSU6FB_fTiy4"
 
 # Example we will input from Strava
+month_of_trip = "July" # change to user input
 recent_activities_json = "1. Mt. Whitney (11 miles), 2. Zion Narrows (5 miles)"
-month_of_trip = "July"
 
 # Reads strava_data.json file
 # with open('strava_data.json', 'r', encoding='utf-8') as file:
 #     recent_activities_json = json.load(file)
-
-# month_of_trip = "Something Here"
 
 # Prompt to submit to Gemini
 prompt = f"""
@@ -36,14 +36,10 @@ and if it's too early for a forecast, predict what the weather might
 look like in {month_of_trip} based on previous years.
 """
 
-prompt = "Tell me a joke"
-
-# Enter Gemini API key below
-user_key = "AIzaSyDnFur1AGpaw-grKbouOiaiSU6FB_fTiy4"
 client = genai.Client(api_key=user_key)
 
 response = client.models.generate_content(
-    model="gemini-2.0-flash-exp",
+    model="gemini-2.5-flash",
     contents=prompt,
 )
 
