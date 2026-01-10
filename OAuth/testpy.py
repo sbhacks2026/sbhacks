@@ -3,10 +3,10 @@ import json
 import requests
 import Activity 
 
-# Get token from Node.js
-token = sys.argv[1] if len(sys.argv) > 1 else "NO TOKEN RECEIVED"
-
-if token == "NO TOKEN RECEIVED":
+# Get token from Node.js (NOT hardcoded!)
+if len(sys.argv) > 1:
+    token = sys.argv[1]
+else:
     print(json.dumps({"error": "No token provided"}))
     sys.exit(1)
 
@@ -16,28 +16,54 @@ class StravaApp:
 
     def get_walking_activities(self):
         request_url = 'https://www.strava.com/api/v3/athlete/activities'
-        header = {"Authorization": "Bearer " + self.token}
+        headers = {"Authorization": f"Bearer {self.token}"}
 
-        result = requests.get(request_url, headers=header).json()
+        try:
+            response = requests.get(request_url, headers=headers)
+            
+            # Check if request was successful
+            if response.status_code != 200:
+                return {
+                    "error": f"Strava API error: {response.status_code}",
+                    "details": response.json()
+                }
+            
+            result = response.json()
+            
+            # Check if result is a list
+            if not isinstance(result, list):
+                return {
+                    "error": "Unexpected response from Strava",
+                    "response": result
+                }
 
-        target_sports = {"Run", "Hike", "TrailRun"}
+            target_sports = {"Run", "Hike", "TrailRun"}
 
-        filtered_activities = [
-            Activity.Activity(activity) for activity in result
-            if activity.get("sport_type") in target_sports
-        ]
+            filtered_activities = []
+            for activity in result:
+                if isinstance(activity, dict) and activity.get("sport_type") in target_sports:
+                    filtered_activities.append(Activity.Activity(activity))
 
-        return Activity.ActivityContainer(filtered_activities)
+            return Activity.ActivityContainer(filtered_activities)
+            
+        except Exception as e:
+            return {
+                "error": f"Exception: {str(e)}"
+            }
 
-# Create app with the user's token
+# Create app
 app = StravaApp(token)
 activities = app.get_walking_activities()
 
-# Convert to dictionary for JSON output
-result = {
-    "status": "success",
-    "message": "Retrieved backpacking activities",
-    "activities": activities.to_dict() if hasattr(activities, 'to_dict') else str(activities)
-}
-
-print(json.dumps(result))
+# Return result
+if isinstance(activities, dict):
+    # It's an error dict
+    print(json.dumps(activities))
+else:
+    # It's an ActivityContainer
+    result = {
+        "status": "success",
+        "message": "Retrieved backpacking activities",
+        "activities": activities.to_dict()
+    }
+    print(json.dumps(result))
