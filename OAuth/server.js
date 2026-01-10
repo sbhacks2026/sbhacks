@@ -188,7 +188,7 @@ app.get('/api/activities', async (req, res) => {
         const activitiesJson = JSON.stringify(req.session.user.activities);
         
         const python = spawn('python3', [
-            'testpy.py',
+            'stravaApp.py',
             activitiesJson  // Pass activities data, not a token
         ]);
 
