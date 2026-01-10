@@ -47,30 +47,62 @@ app.post('/auth/token', async (req, res) => {
         });
 
         const data = response.data;
+        const accessToken = data.access_token;
         
-        // Store THIS user's data in THEIR session
+        console.log('✅ User authenticated:', data.athlete.username);
+        
+        // IMMEDIATELY fetch their activities while token is valid
+        let activities = [];
+        try {
+            const activitiesResponse = await axios.get(
+                'https://www.strava.com/api/v3/athlete/activities',
+                {
+                    headers: { 'Authorization': `Bearer ${accessToken}` },
+                    params: { per_page: 100 }
+                }
+            );
+            activities = activitiesResponse.data;
+            console.log(`✅ Fetched ${activities.length} activities`);
+        } catch (actError) {
+            console.error('⚠️ Error fetching activities:', actError.message);
+            // Continue anyway - we'll store empty array
+        }
+        
+        // Store user data AND activities in session
         req.session.user = {
             athlete: data.athlete,
-            access_token: data.access_token,
-            refresh_token: data.refresh_token,
+            activities: activities,  // Store the fetched activities!
             expires_at: data.expires_at
         };
         
-        console.log('✅ User authenticated:', data.athlete.username, '- Session ID:', req.sessionID);
-        
-        // DON'T DEAUTHORIZE HERE!
-        // We'll deauthorize AFTER fetching activities in /api/activities
+        // NOW deauthorize (we already have the data we need)
+        try {
+            await axios.post('https://www.strava.com/oauth/deauthorize', null, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            });
+            console.log('✅ Deauthorized user - slot freed for next person!');
+        } catch (deauthError) {
+            console.error('⚠️ Error deauthorizing:', deauthError.message);
+            // Continue anyway
+        }
         
         res.json({
             athlete: data.athlete,
-            access_token: data.access_token,
-            refresh_token: data.refresh_token,
-            expires_at: data.expires_at,
-            expires_in: data.expires_in
+            activities_count: activities.length,
+            message: 'Successfully authenticated and fetched activities'
         });
 
     } catch (error) {
-        console.error('Error exchanging token:', error.response?.data || error.message);
+        console.error('❌ Error exchanging token:', error.response?.data || error.message);
+        
+        // Check if it's the "too many athletes" error
+        if (error.response?.data?.message?.toLowerCase().includes('athlete')) {
+            return res.status(429).json({ 
+                error: 'Too many athletes connected. Please try again in a moment.',
+                details: error.response?.data 
+            });
+        }
+        
         res.status(500).json({ 
             error: 'Failed to exchange authorization code',
             details: error.response?.data || error.message 
@@ -116,22 +148,21 @@ app.post('/auth/refresh', async (req, res) => {
 });
 
 const { spawn } = require('child_process');
-const axios = require('axios');
 
-// Get athlete's activities - RUNS PYTHON THEN DEAUTHORIZES
+// Get athlete's activities - USES STORED DATA (no Strava API call needed!)
 app.get('/api/activities', async (req, res) => {
-    // Check if this user has a session with a token
-    if (!req.session.user || !req.session.user.access_token) {
+    // Check if this user has a session with activities
+    if (!req.session.user || !req.session.user.activities) {
         return res.status(401).json({ error: 'Not authenticated. Please log in first.' });
     }
 
-    const accessToken = req.session.user.access_token;
-
     try {
-        // Call Python script with user's access token
+        // Pass stored activities to Python (as JSON string)
+        const activitiesJson = JSON.stringify(req.session.user.activities);
+        
         const python = spawn('python3', [
             'testpy.py',
-            accessToken
+            activitiesJson  // Pass activities data, not a token
         ]);
 
         let result = '';
@@ -145,22 +176,9 @@ app.get('/api/activities', async (req, res) => {
             errorOutput += data.toString();
         });
 
-        python.on('close', async (code) => {
-            // DEAUTHORIZE NOW - after Python got the data
-            try {
-                await axios.post('https://www.strava.com/oauth/deauthorize', null, {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-                console.log('✅ Deauthorized user after fetching activities - slot freed!');
-            } catch (deauthError) {
-                console.log('⚠️ Could not deauthorize:', deauthError.message);
-            }
-
-            // Handle Python results
+        python.on('close', (code) => {
             if (code !== 0) {
-                console.error('Python error:', errorOutput);
+                console.error('❌ Python error:', errorOutput);
                 return res.status(500).json({ 
                     error: 'Failed to analyze activities',
                     details: errorOutput 
@@ -171,7 +189,7 @@ app.get('/api/activities', async (req, res) => {
                 const analysis = JSON.parse(result);
                 res.json(analysis);
             } catch (parseError) {
-                console.error('Failed to parse Python output:', result);
+                console.error('❌ Failed to parse Python output:', result);
                 res.status(500).json({ 
                     error: 'Failed to parse analysis results',
                     details: parseError.message,
@@ -181,7 +199,7 @@ app.get('/api/activities', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error running Python script:', error.message);
+        console.error('❌ Error running Python script:', error.message);
         res.status(500).json({ 
             error: 'Failed to run analysis',
             details: error.message 
