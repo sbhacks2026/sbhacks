@@ -30,6 +30,10 @@ Here are my activities in order in the json:
         based off of repeating locations so you can suggest
         nearby backpacking trail, as well as one that is in a 
         new unexplored area
+        - Give hike activities a stronger weight when trying to
+        predict/recommend a good backpacking trail, while using
+        runs and other activities as less important more general
+        predictors for overall fitness.
 
 Based on my recent activities, return a suggested backpacking trail
 showing me: 
@@ -47,6 +51,9 @@ Also, search for a weather forecast in the area for {month_of_trip},
 and if it's too early for a forecast, predict what the weather might 
 look like in {month_of_trip} based on previous years. Return this 
 in a very brief statement of what conditions to expect.
+
+At the end, inlcude the link to the hike/trail on the AllTrails
+website.
 """
 
 client = genai.Client(api_key=user_key)
