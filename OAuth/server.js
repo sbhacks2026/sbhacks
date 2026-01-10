@@ -127,18 +127,20 @@ app.post('/auth/refresh', async (req, res) => {
 
 const { spawn } = require('child_process');
 
-// Get athlete's activities - RUNS PYTHON ANALYSIS
+// Get athlete's activities - RUNS PYTHON THEN DEAUTHORIZES
 app.get('/api/activities', async (req, res) => {
     // Check if this user has a session with a token
     if (!req.session.user || !req.session.user.access_token) {
         return res.status(401).json({ error: 'Not authenticated. Please log in first.' });
     }
 
+    const accessToken = req.session.user.access_token;
+
     try {
         // Call Python script with user's access token
         const python = spawn('python3', [
             'testpy.py',
-            req.session.user.access_token
+            accessToken
         ]);
 
         let result = '';
@@ -154,7 +156,19 @@ app.get('/api/activities', async (req, res) => {
         });
 
         // When Python finishes
-        python.on('close', (code) => {
+        python.on('close', async (code) => {
+            // DEAUTHORIZE NOW (after Python got the data)
+            try {
+                await axios.post('https://www.strava.com/oauth/deauthorize', null, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                console.log('Deauthorized user after fetching activities');
+            } catch (deauthError) {
+                console.log('Error deauthorizing:', deauthError.message);
+            }
+
             if (code !== 0) {
                 console.error('Python error:', errorOutput);
                 return res.status(500).json({ 
