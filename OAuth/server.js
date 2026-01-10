@@ -125,7 +125,9 @@ app.post('/auth/refresh', async (req, res) => {
     }
 });
 
-// Get athlete's activities - USES EACH USER'S OWN TOKEN
+const { spawn } = require('child_process');
+
+// Get athlete's activities - RUNS PYTHON ANALYSIS
 app.get('/api/activities', async (req, res) => {
     // Check if this user has a session with a token
     if (!req.session.user || !req.session.user.access_token) {
@@ -133,22 +135,52 @@ app.get('/api/activities', async (req, res) => {
     }
 
     try {
-        // Use THIS user's token from THEIR session
-        const response = await axios.get('https://www.strava.com/api/v3/athlete/activities', {
-            headers: {
-                'Authorization': `Bearer ${req.session.user.access_token}`
-            },
-            params: {
-                per_page: 10
+        // Call Python script with user's access token
+        const python = spawn('python3', [
+            'testpy.py',
+            req.session.user.access_token
+        ]);
+
+        let result = '';
+        let errorOutput = '';
+
+        // Collect data from Python script
+        python.stdout.on('data', (data) => {
+            result += data.toString();
+        });
+
+        python.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+
+        // When Python finishes
+        python.on('close', (code) => {
+            if (code !== 0) {
+                console.error('Python error:', errorOutput);
+                return res.status(500).json({ 
+                    error: 'Failed to analyze activities',
+                    details: errorOutput 
+                });
+            }
+
+            try {
+                // Parse and return Python's JSON output
+                const analysis = JSON.parse(result);
+                res.json(analysis);
+            } catch (parseError) {
+                console.error('Failed to parse Python output:', result);
+                res.status(500).json({ 
+                    error: 'Failed to parse analysis results',
+                    details: parseError.message 
+                });
             }
         });
 
-        res.json(response.data);
     } catch (error) {
-        console.error('Error fetching activities:', error.response?.data || error.message);
+        console.error('Error running Python script:', error.message);
         res.status(500).json({ 
-            error: 'Failed to fetch activities',
-            details: error.response?.data || error.message 
+            error: 'Failed to run analysis',
+            details: error.message 
         });
     }
 });
