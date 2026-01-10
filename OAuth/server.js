@@ -116,6 +116,7 @@ app.post('/auth/refresh', async (req, res) => {
 });
 
 const { spawn } = require('child_process');
+const axios = require('axios');
 
 // Get athlete's activities - RUNS PYTHON THEN DEAUTHORIZES
 app.get('/api/activities', async (req, res) => {
@@ -136,7 +137,6 @@ app.get('/api/activities', async (req, res) => {
         let result = '';
         let errorOutput = '';
 
-        // Collect data from Python script
         python.stdout.on('data', (data) => {
             result += data.toString();
         });
@@ -145,20 +145,20 @@ app.get('/api/activities', async (req, res) => {
             errorOutput += data.toString();
         });
 
-        // When Python finishes
         python.on('close', async (code) => {
-            // DEAUTHORIZE NOW (after Python got the data)
+            // DEAUTHORIZE NOW - after Python got the data
             try {
                 await axios.post('https://www.strava.com/oauth/deauthorize', null, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
                 });
-                console.log('Deauthorized user after fetching activities');
+                console.log('✅ Deauthorized user after fetching activities - slot freed!');
             } catch (deauthError) {
-                console.log('Error deauthorizing:', deauthError.message);
+                console.log('⚠️ Could not deauthorize:', deauthError.message);
             }
 
+            // Handle Python results
             if (code !== 0) {
                 console.error('Python error:', errorOutput);
                 return res.status(500).json({ 
@@ -168,14 +168,14 @@ app.get('/api/activities', async (req, res) => {
             }
 
             try {
-                // Parse and return Python's JSON output
                 const analysis = JSON.parse(result);
                 res.json(analysis);
             } catch (parseError) {
                 console.error('Failed to parse Python output:', result);
                 res.status(500).json({ 
                     error: 'Failed to parse analysis results',
-                    details: parseError.message 
+                    details: parseError.message,
+                    raw_output: result
                 });
             }
         });
