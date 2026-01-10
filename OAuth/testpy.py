@@ -1,13 +1,8 @@
 import sys
 import json
-
-# Get the access token passed from Node.js
-access_token = sys.argv[1] if len(sys.argv) > 1 else "NO TOKEN RECEIVED"
-
-# Return it as JSON
-
 import requests
 import Activity 
+
 def get_token():
     auth_url = "https://www.strava.com/oauth/token"
     data = {
@@ -22,7 +17,7 @@ def get_token():
     access_token = auth_result['access_token']
     return access_token
 
-token = get_token()
+token = sys.argv[1] if len(sys.argv) > 1 else "NO TOKEN RECEIVED"
 
 class StravaApp:
     def __init__(self, token : str):
