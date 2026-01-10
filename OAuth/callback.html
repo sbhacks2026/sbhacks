@@ -118,6 +118,8 @@
             }
         }
 
+        // In callback.html, find the showSuccess function and update it:
+
         function showSuccess(data) {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('result').style.display = 'block';
@@ -129,12 +131,13 @@
             const detailsDiv = document.getElementById('details');
             detailsDiv.innerHTML = `
                 <p class="info">Athlete: ${data.athlete.firstname} ${data.athlete.lastname}</p>
-                <p class="info">Username: ${data.athlete.username}</p>
-                <pre>${JSON.stringify(data, null, 2)}</pre>
-                <p style="margin-top: 20px;">
-                    <a href="/" style="color: #fc4c02; text-decoration: none; font-weight: bold;">← Back to Home</a>
-                </p>
+                <p class="info">Redirecting to route finder...</p>
             `;
+            
+            // Redirect to activities page after 2 seconds
+            setTimeout(() => {
+                window.location.href = '/api/activities';
+            }, 2000);
         }
 
         function showError(message) {
