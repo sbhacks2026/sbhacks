@@ -3,7 +3,7 @@ import json
 import requests
 import Activity 
 
-# Get token from Node.js (NOT hardcoded!)
+# Get token from Node.js
 if len(sys.argv) > 1:
     token = sys.argv[1]
 else:
@@ -21,7 +21,6 @@ class StravaApp:
         try:
             response = requests.get(request_url, headers=headers)
             
-            # Check if request was successful
             if response.status_code != 200:
                 return {
                     "error": f"Strava API error: {response.status_code}",
@@ -30,7 +29,6 @@ class StravaApp:
             
             result = response.json()
             
-            # Check if result is a list
             if not isinstance(result, list):
                 return {
                     "error": "Unexpected response from Strava",
@@ -39,12 +37,20 @@ class StravaApp:
 
             target_sports = {"Run", "Hike", "TrailRun"}
 
+            # Return dict directly instead of ActivityContainer
             filtered_activities = []
             for activity in result:
                 if isinstance(activity, dict) and activity.get("sport_type") in target_sports:
-                    filtered_activities.append(Activity.Activity(activity))
+                    filtered_activities.append({
+                        "name": activity.get("name"),
+                        "type": activity.get("sport_type"),
+                        "distance": activity.get("distance"),
+                        "elevation_gain": activity.get("total_elevation_gain"),
+                        "moving_time": activity.get("moving_time"),
+                        "start_date": activity.get("start_date")
+                    })
 
-            return Activity.ActivityContainer(filtered_activities)
+            return filtered_activities  # Return list of dicts, not ActivityContainer
             
         except Exception as e:
             return {
@@ -56,14 +62,17 @@ app = StravaApp(token)
 activities = app.get_walking_activities()
 
 # Return result
-if isinstance(activities, dict):
+if isinstance(activities, dict) and "error" in activities:
     # It's an error dict
     print(json.dumps(activities))
-else:
-    # It's an ActivityContainer
+elif isinstance(activities, list):
+    # It's a list of activity dicts
     result = {
         "status": "success",
         "message": "Retrieved backpacking activities",
-        "activities": activities.to_dict()
+        "total_activities": len(activities),
+        "activities": activities
     }
     print(json.dumps(result))
+else:
+    print(json.dumps({"error": "Unexpected return type"}))
