@@ -8,6 +8,7 @@ with open('key.json', 'r', encoding='utf-8') as key_file:
 
 # Example we will input from Strava
 month_of_trip = "July" # change to user input
+current_location = "Santa Barbara, CA"
 # recent_activities_json = "1. Mt. Whitney (11 miles), 2. Zion Narrows (5 miles)"
 
 # Reads strava_data.json file
@@ -16,7 +17,8 @@ with open('strava_data.json', 'r', encoding='utf-8') as file:
 
 # Prompt to submit to Gemini
 prompt = f"""
-I'm trying to plan a backpacking trip in {month_of_trip} and I'm looking for a trail. 
+I'm trying to plan a backpacking trip in {month_of_trip} and I'm 
+looking for a trail that exists on a website. 
 In order to tailor your search to my preferences, I will provide 
 you with a list of my most recent activities along with some 
 statistics for them in a json file. 
@@ -36,7 +38,7 @@ Here are my activities in order in the json:
         predictors for overall fitness.
 
 Based on my recent activities, return a suggested backpacking trail
-showing me: 
+that you can find on a website showing me: 
     - the title at the top in bold
     - the distance in miles
     - elevation gain in feet 
@@ -52,8 +54,11 @@ and if it's too early for a forecast, predict what the weather might
 look like in {month_of_trip} based on previous years. Return this 
 in a very brief statement of what conditions to expect.
 
-At the end, inlcude the link to the hike/trail on the AllTrails
-website.
+Give me the time it takes to drive to this hike from {current_location}.
+
+At the end, inlcude the link/reference that you used to find this 
+trail. Make sure there is a valid link and reference for your recommended
+hike, otherwise find a different trail.
 """
 
 client = genai.Client(api_key=user_key)
