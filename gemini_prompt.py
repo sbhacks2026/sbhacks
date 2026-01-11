@@ -21,7 +21,7 @@ if len(sys.argv) > 1:
     # User preferences (with defaults if not provided)
     month_of_trip = sys.argv[2] if len(sys.argv) > 2 else "July"
     current_location = sys.argv[3] if len(sys.argv) > 3 else "Santa Barbara, CA"
-    driving_distance = sys.argv[4] if len(sys.argv) > 4 else "100"
+    driving_hours = sys.argv[4] if len(sys.argv) > 4 else "1"
     difficulty = sys.argv[5] if len(sys.argv) > 5 else "Moderate"
 else:
     # Fallback: Reads strava_data.json file for local testing
@@ -31,7 +31,7 @@ else:
     # Default values for local testing
     month_of_trip = "July"
     current_location = "Santa Barbara, CA"
-    driving_distance = "100"
+    driving_hours = "1"
     difficulty = "Moderate"
 
 # Prompt to submit to Gemini
@@ -41,7 +41,7 @@ I'm planning a backpacking trip in {month_of_trip} and need help finding the rig
 ## My Location and Constraints
 
 - **Current Location**: {current_location}
-- **Willing to Drive**: Up to {driving_distance} miles
+- **Willing to Drive**: Up to {driving_hours} hours
 - **Desired Difficulty**: {difficulty}
 - **Trip Month**: {month_of_trip}
 
@@ -59,18 +59,19 @@ When reviewing my activity data:
 
 ## Trail Recommendation Format
 
-Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_distance} miles driving distance from {current_location}.
+Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_hours} hours driving distance from {current_location}.
 
 Format your response as follows:
 
 **[Trail Name]**
 - **Distance**: X miles
-- **Elevation Gain**: X feet  
+- **Elevation Gain**: X feet
 - **Difficulty**: [Easy/Moderate/Strenuous]
 - **Trail Type**: [Loop/Out & Back/Point-to-Point]
 - **Recommended Duration**: X days / X nights
+- **Permit Required**: [Yes/No]
 
-**Trail Summary**: [2-3 sentences describing terrain, scenery, highlights, and what to expect]
+**Trail Summary**: [2-3 sentences describing terrain, scenery, highlights, and what to expect. If a permit is required, briefly explain how to obtain it and any lottery/reservation system details]
 
 **Weather Forecast for {month_of_trip}**: [Brief statement about expected conditions. If a specific forecast isn't available, provide typical weather patterns for this location and month based on historical data]
 
