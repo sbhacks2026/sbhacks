@@ -1,8 +1,9 @@
 from serpapi import GoogleSearch
 import sys
 import json
+import os
 
-def search_trail(trail_name, location=""):
+def search_trail(trail_name):
     """
     Search for a trail on Google and return the first AllTrails link.
 
@@ -24,7 +25,7 @@ def search_trail(trail_name, location=""):
         "google_domain": "google.com",
         "hl": "en",
         "gl": "us",
-        "api_key": "975824a675b71dc0d0aeda8a04d37166df2d746599a3cd2fd96b767002400435"
+        "api_key": os.environ.get("GOOGLE_SEARCH_KEY")
     }
 
     search = GoogleSearch(params)
@@ -52,6 +53,5 @@ if __name__ == "__main__":
         sys.exit(1)
 
     trail_name = sys.argv[1]
-    location = sys.argv[2] if len(sys.argv) > 2 else ""
 
-    print(search_trail(trail_name, location))
+    print(search_trail(trail_name))

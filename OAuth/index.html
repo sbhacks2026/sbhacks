@@ -53,33 +53,37 @@
         }
         
         .strava-button {
-            background-color: #fc4c02;
-            color: white;
-            padding: 15px 30px;
+            background: none;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 0;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: background-color 0.3s;
+            transition: opacity 0.3s;
         }
 
         .strava-button img {
-            height: 24px;
-            width: auto;
+            display: block;
+            height: auto;
+            width: 193px; /* Default Strava button width */
         }
-        
+
         .strava-button:hover {
-            background-color: #e04402;
+            opacity: 0.8;
         }
-        
+
         .strava-button:active {
             transform: scale(0.98);
+        }
+
+        .powered-by-strava {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .powered-by-strava img {
+            height: 13px;
+            width: auto;
         }
     </style>
 </head>
@@ -94,9 +98,12 @@
         <h1>Welcome to TrailForge</h1>
         <p>Connect your Strava account to get personallized trail planning insights</p>
         <button class="strava-button" onclick="loginWithStrava()">
-            <img src="strava_logo.svg" alt="Strava Logo">
-            Login with Strava
+            <img src="btn_strava_connect_with_orange.png" alt="Connect with Strava">
         </button>
+    </div>
+
+    <div class="powered-by-strava">
+        <img src="api_logo_pwrdBy_strava_horiz_white.png" alt="Powered by Strava">
     </div>
 
     <script>

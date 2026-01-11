@@ -373,7 +373,7 @@
             let permitStatus = "No";
             if (permitMatch) {
                 const permitText = cleanStatValue(permitMatch[1]).toLowerCase();
-                permitStatus = (permitText.includes('yes') || permitText.includes('required')) ? "Yes" : "No";
+                permitStatus = (permitText.includes('yes') || permitText.includes('is required')) ? "Yes" : "No";
             }
 
             const statsHTML = `
