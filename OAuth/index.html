@@ -62,8 +62,16 @@
             font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             transition: background-color 0.3s;
+        }
+
+        .strava-button img {
+            height: 24px;
+            width: auto;
         }
         
         .strava-button:hover {
@@ -86,6 +94,7 @@
         <h1>Welcome to TrailForge</h1>
         <p>Connect your Strava account to get personallized trail planning insights</p>
         <button class="strava-button" onclick="loginWithStrava()">
+            <img src="strava_logo.svg" alt="Strava Logo">
             Login with Strava
         </button>
     </div>
