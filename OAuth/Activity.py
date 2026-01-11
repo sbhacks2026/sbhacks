@@ -2,7 +2,6 @@ import json
 
 class Activity:
     def __init__(self, get_activity_output):
-        self.name = get_activity_output.get("name")
         self.id = get_activity_output.get("id") # for debugging
         self.date = get_activity_output.get("start_date")
         self.sport_type = get_activity_output.get("sport_type")
@@ -15,8 +14,7 @@ class Activity:
         self.elev_high = get_activity_output.get("elev_high")
 
     def __str__(self):
-        return (f"NAME: {self.name}\n"
-                f"Start Location: {self.location}\n"
+        return (f"Start Location: {self.location}\n"
                 f"Distance: {self.distance}\n"
                 f"Elevation Gain: {self.elevation}\n"
                 f"Avg Speed: {self.avg_speed}\n"
@@ -25,7 +23,6 @@ class Activity:
 
     def to_dict(self):
         return {
-            "name ": self.name,
             "id": self.id,
             "start_date": self.date,
             "distance (miles)": self.get_distance_in_miles(),
