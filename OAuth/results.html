@@ -79,47 +79,45 @@
 
         .trail-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 17px;
+            margin: 21.25px 0;
+            padding: 17px;
             background: #f8f9fa;
-            border-radius: 10px;
+            border-radius: 8.5px;
         }
 
         .stat-item {
             text-align: center;
-            padding: 15px;
+            padding: 12.75px;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 6.8px;
+            box-shadow: 0 1.7px 6.8px rgba(0, 0, 0, 0.08);
         }
 
         .stat-label {
-            font-size: 0.9em;
+            font-size: 0.765em;
             color: #666;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            letter-spacing: 0.425px;
+            margin-bottom: 6.8px;
         }
 
         .stat-value {
-            font-size: 1.5em;
+            font-size: 1.275em;
             font-weight: bold;
             color: #fc4c02;
         }
 
         .fitness-summary {
-            background: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            padding: 20px;
-            border-radius: 5px;
             margin-bottom: 25px;
         }
 
         .fitness-summary p {
-            color: #2e7d32;
-            margin: 0;
+            color: #444;
+            font-family: sans-serif;
+            line-height: 1.8;
+            font-size: 1.05em;
         }
 
         .trail-description {
@@ -305,19 +303,24 @@
                 document.getElementById('trailName').textContent = trailNameMatch[1];
             }
 
-            // Extract trail stats
+            // Extract trail stats - remove **:, ~, and extra formatting
             const distanceMatch = recommendationText.match(/Distance[:\s]*~?([^\n]+)/);
             const elevationMatch = recommendationText.match(/Elevation Gain[:\s]*~?([^\n]+)/);
             const difficultyMatch = recommendationText.match(/Difficulty[:\s]*([^\n]+)/);
             const durationMatch = recommendationText.match(/Recommended Duration[:\s]*([^\n]+)/);
             const trailTypeMatch = recommendationText.match(/Trail Type[:\s]*([^\n]+)/);
 
+            // Function to clean stat values
+            const cleanStatValue = (value) => {
+                return value.replace(/\*\*:/g, '').replace(/~/g, '').trim();
+            };
+
             const statsHTML = `
-                ${distanceMatch ? `<div class="stat-item"><div class="stat-label">Distance</div><div class="stat-value">${distanceMatch[1].trim()}</div></div>` : ''}
-                ${elevationMatch ? `<div class="stat-item"><div class="stat-label">Elevation Gain</div><div class="stat-value">${elevationMatch[1].trim()}</div></div>` : ''}
-                ${difficultyMatch ? `<div class="stat-item"><div class="stat-label">Difficulty</div><div class="stat-value">${difficultyMatch[1].trim()}</div></div>` : ''}
-                ${trailTypeMatch ? `<div class="stat-item"><div class="stat-label">Trail Type</div><div class="stat-value">${trailTypeMatch[1].trim()}</div></div>` : ''}
-                ${durationMatch ? `<div class="stat-item"><div class="stat-label">Duration</div><div class="stat-value">${durationMatch[1].trim()}</div></div>` : ''}
+                ${distanceMatch ? `<div class="stat-item"><div class="stat-label">Distance</div><div class="stat-value">${cleanStatValue(distanceMatch[1])}</div></div>` : ''}
+                ${elevationMatch ? `<div class="stat-item"><div class="stat-label">Elevation Gain</div><div class="stat-value">${cleanStatValue(elevationMatch[1])}</div></div>` : ''}
+                ${difficultyMatch ? `<div class="stat-item"><div class="stat-label">Difficulty</div><div class="stat-value">${cleanStatValue(difficultyMatch[1])}</div></div>` : ''}
+                ${trailTypeMatch ? `<div class="stat-item"><div class="stat-label">Trail Type</div><div class="stat-value">${cleanStatValue(trailTypeMatch[1])}</div></div>` : ''}
+                ${durationMatch ? `<div class="stat-item"><div class="stat-label">Duration</div><div class="stat-value">${cleanStatValue(durationMatch[1])}</div></div>` : ''}
             `;
             document.getElementById('trailStats').innerHTML = statsHTML;
 
