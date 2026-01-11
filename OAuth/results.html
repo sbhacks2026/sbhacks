@@ -85,16 +85,6 @@
             padding: 17px;
             background: #f8f9fa;
             border-radius: 8.5px;
-            justify-items: center;
-        }
-
-        .trail-stats .stat-item:nth-child(4),
-        .trail-stats .stat-item:nth-child(5) {
-            grid-column: span 1;
-        }
-
-        .trail-stats .stat-item:nth-child(4) {
-            grid-column-start: 2;
         }
 
         .stat-item {
@@ -152,6 +142,30 @@
             font-size: 1.05em;
         }
 
+        .alltrails-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .load-alltrails-btn {
+            background: #fc4c02;
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(252, 76, 2, 0.3);
+        }
+
+        .load-alltrails-btn:hover {
+            background: #e04402;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(252, 76, 2, 0.4);
+        }
+
         .alltrails-embed {
             width: 100%;
             height: 600px;
@@ -159,6 +173,10 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
+        }
+
+        .alltrails-embed.hidden {
+            display: none;
         }
 
         .alltrails-embed iframe {
@@ -286,11 +304,16 @@
                 </div>
             </div>
 
-            <!-- Embedded AllTrails -->
+            <!-- AllTrails Section -->
             <div class="section">
                 <h2>Explore on AllTrails</h2>
-                <div class="alltrails-embed">
-                    <iframe id="alltrailsEmbed" src="" frameborder="0" allowfullscreen></iframe>
+                <div id="alltrailsContainer" class="alltrails-container">
+                    <button id="loadAlltrailsBtn" class="load-alltrails-btn">
+                        🏔️ Load Trail Page
+                    </button>
+                    <div id="alltrailsEmbed" class="alltrails-embed hidden">
+                        <iframe id="alltrailsIframe" src="" frameborder="0" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
         </div>
@@ -321,11 +344,19 @@
             const difficultyMatch = recommendationText.match(/Difficulty[:\s]*([^\n]+)/);
             const durationMatch = recommendationText.match(/Recommended Duration[:\s]*([^\n]+)/);
             const trailTypeMatch = recommendationText.match(/Trail Type[:\s]*([^\n]+)/);
+            const permitMatch = recommendationText.match(/Permit[:\s]*(Yes|No|Required|Not Required|[^\n]+)/i);
 
             // Function to clean stat values
             const cleanStatValue = (value) => {
                 return value.replace(/\*\*:/g, '').replace(/~/g, '').trim();
             };
+
+            // Determine permit status - default to "No" if not found
+            let permitStatus = "No";
+            if (permitMatch) {
+                const permitText = cleanStatValue(permitMatch[1]).toLowerCase();
+                permitStatus = (permitText.includes('yes') || permitText.includes('required')) ? "Yes" : "No";
+            }
 
             const statsHTML = `
                 ${distanceMatch ? `<div class="stat-item"><div class="stat-label">Distance</div><div class="stat-value">${cleanStatValue(distanceMatch[1])}</div></div>` : ''}
@@ -333,6 +364,7 @@
                 ${difficultyMatch ? `<div class="stat-item"><div class="stat-label">Difficulty</div><div class="stat-value">${cleanStatValue(difficultyMatch[1])}</div></div>` : ''}
                 ${trailTypeMatch ? `<div class="stat-item"><div class="stat-label">Trail Type</div><div class="stat-value">${cleanStatValue(trailTypeMatch[1])}</div></div>` : ''}
                 ${durationMatch ? `<div class="stat-item"><div class="stat-label">Duration</div><div class="stat-value">${cleanStatValue(durationMatch[1])}</div></div>` : ''}
+                <div class="stat-item"><div class="stat-label">Permit</div><div class="stat-value">${permitStatus}</div></div>
             `;
             document.getElementById('trailStats').innerHTML = statsHTML;
 
@@ -348,11 +380,21 @@
                 document.getElementById('weatherInfo').textContent = weatherMatch[1].trim();
             }
 
-            // Extract AllTrails link and embed it
+            // Extract AllTrails link and set up button click handler
             const linkMatch = recommendationText.match(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/);
             if (linkMatch) {
-                const alltrailsEmbed = document.getElementById('alltrailsEmbed');
-                alltrailsEmbed.src = linkMatch[2];
+                const alltrailsUrl = linkMatch[2];
+                const loadBtn = document.getElementById('loadAlltrailsBtn');
+                const embedContainer = document.getElementById('alltrailsEmbed');
+                const iframe = document.getElementById('alltrailsIframe');
+
+                loadBtn.addEventListener('click', () => {
+                    // Load the iframe
+                    iframe.src = alltrailsUrl;
+                    // Hide button and show iframe
+                    loadBtn.style.display = 'none';
+                    embedContainer.classList.remove('hidden');
+                });
             }
         }
 
