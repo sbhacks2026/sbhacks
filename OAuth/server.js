@@ -317,7 +317,7 @@ app.get('/api/recommendation', async (req, res) => {
             errorOutput += data.toString();
         });
 
-        python.on('close', async (code) => {
+        python.on('close', (code) => {
             if (code !== 0) {
                 console.error('❌ Python error:', errorOutput);
                 return res.status(500).json({
