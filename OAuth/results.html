@@ -305,15 +305,23 @@ For your July backpacking trip, I recommend a classic and strenuous Sierra Nevad
 **AllTrails Link**: [https://www.alltrails.com/trail/us/california/rae-lakes-loop](https://www.alltrails.com/trail/us/california/rae-lakes-loop)`;
 
         // Call the function when page loads
-        // In production, you'd fetch this from your API instead
         window.addEventListener('DOMContentLoaded', () => {
-            // TODO: Replace with actual API call
-            // fetch('/api/recommendation')
-            //     .then(response => response.json())
-            //     .then(data => displayRecommendation(data.recommendation));
-
-            // For now, use the example
-            displayRecommendation(exampleRecommendation);
+            // Fetch recommendation from API
+            fetch('/api/recommendation')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch recommendation');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayRecommendation(data.recommendation);
+                })
+                .catch(error => {
+                    console.error('Error fetching recommendation:', error);
+                    // Fallback to example if API call fails
+                    displayRecommendation(exampleRecommendation);
+                });
         });
     </script>
 </body>

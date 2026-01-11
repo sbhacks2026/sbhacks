@@ -273,10 +273,59 @@ app.get('/callback', (req, res) => {
     res.sendFile(path.join(__dirname, 'callback.html'));
 });
 
-// // Serve results page
-// app.get('/results', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'results.html'));
-// });
+// Get trail recommendation from Gemini
+app.get('/api/recommendation', async (req, res) => {
+    // Check if this user has a session with activities
+    if (!req.session.user || !req.session.user.activities) {
+        return res.status(401).json({ error: 'Not authenticated. Please log in first.' });
+    }
+
+    try {
+        // Pass stored activities to Python gemini_prompt.py (as JSON string)
+        const activitiesJson = JSON.stringify(req.session.user.activities);
+
+        const python = spawn('python3', [
+            '../gemini_prompt.py',  // Path relative to OAuth folder
+            activitiesJson  // Pass activities data
+        ]);
+
+        let result = '';
+        let errorOutput = '';
+
+        python.stdout.on('data', (data) => {
+            result += data.toString();
+        });
+
+        python.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+
+        python.on('close', (code) => {
+            if (code !== 0) {
+                console.error('❌ Python error:', errorOutput);
+                return res.status(500).json({
+                    error: 'Failed to generate recommendation',
+                    details: errorOutput
+                });
+            }
+
+            // Return the recommendation text
+            res.json({ recommendation: result.trim() });
+        });
+
+    } catch (error) {
+        console.error('Error running gemini_prompt.py:', error.message);
+        res.status(500).json({
+            error: 'Failed to generate recommendation',
+            details: error.message
+        });
+    }
+});
+
+// Serve results page
+app.get('/results', (req, res) => {
+    res.sendFile(path.join(__dirname, 'results.html'));
+});
 
 // Serve index page
 app.get('/', (req, res) => {

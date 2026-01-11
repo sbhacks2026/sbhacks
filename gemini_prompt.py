@@ -1,6 +1,12 @@
 from google import genai
 import json
 import os
+import sys
+
+
+# Uncomment below when pushing for website demo
+# user_key = os.environ.get('GEMINI_API_KEY')
+
 
 # Enter Gemini API key below
 with open('key.json', 'r', encoding='utf-8') as key_file:
@@ -10,11 +16,15 @@ with open('key.json', 'r', encoding='utf-8') as key_file:
 # Example we will input from Strava
 month_of_trip = "July" # change to user input
 current_location = "Santa Barbara, CA"
-# recent_activities_json = "1. Mt. Whitney (11 miles), 2. Zion Narrows (5 miles)"
 
-# Reads strava_data.json file
-with open('strava_data.json', 'r', encoding='utf-8') as file:
-    recent_activities_json = json.load(file)
+# Accept activities as command-line argument from Node.js
+if len(sys.argv) > 1:
+    # Activities passed as JSON string from server.js
+    recent_activities_json = json.loads(sys.argv[1])
+else:
+    # Fallback: Reads strava_data.json file for local testing
+    with open('strava_data.json', 'r', encoding='utf-8') as file:
+        recent_activities_json = json.load(file)
 
 # Prompt to submit to Gemini
 prompt = f"""
@@ -54,9 +64,6 @@ Please recommend ONE backpacking trail and format your response as follows:
 - Consider seasonal factors (snow, heat, water availability) when suggesting timing
 - If my activity history suggests I'm not ready for multi-day backpacking, recommend a challenging day hike instead and explain why
 """
-
-# Uncomment below when pushing for website demo
-# user_key = os.environ.get('GEMINI_API_KEY')
 
 client = genai.Client(api_key = user_key)
 
