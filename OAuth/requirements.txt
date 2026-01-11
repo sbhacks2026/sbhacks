@@ -1,2 +1,4 @@
 google-genai
 requests
+serpapi
+google-search-results
