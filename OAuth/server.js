@@ -339,6 +339,35 @@ app.get('/api/recommendation', async (req, res) => {
     }
 });
 
+// Get AllTrails URL for a specific trail
+app.get('/api/get-trail-url', async (req, res) => {
+    const { name } = req.query;
+    
+    if (!name) {
+        return res.status(400).json({ error: 'Trail name is required' });
+    }
+
+    try {
+        const python = spawn('python3', [
+            '../get_trail_url.py',
+            name
+        ]);
+
+        let result = '';
+        
+        python.stdout.on('data', (data) => {
+            result += data.toString();
+        });
+
+        python.on('close', (code) => {
+            // Return the URL found by the script
+            res.json({ url: result.trim() });
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Raw Gemini output endpoint (for testing)
 app.get('/api/raw-recommendation', async (req, res) => {
     // Check if this user has a session with activities
@@ -427,4 +456,3 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log(`Make sure to set your Strava callback URL to: ${process.env.CALLBACK_URL || `http://localhost:${PORT}/callback`}`);
 });
-

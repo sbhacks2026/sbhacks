@@ -398,32 +398,28 @@
                 document.getElementById('weatherInfo').textContent = weatherMatch[1].trim();
             }
 
-            // Extract AllTrails link - try multiple formats
-            let alltrailsUrl = null;
-    
+            // Fetch AllTrails link using the trail name
+            if (trailNameMatch) {
+                const trailName = trailNameMatch[1];
+                
+                fetch(`/api/get-trail-url?name=${encodeURIComponent(trailName)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.url && data.url.includes('alltrails.com')) {
+                            let url = data.url;
+                            // Transform URL from /trail/ to /widget/trail/ and add query parameters
+                            if (url.includes('/trail/')) {
+                                url = url.replace('/trail/', '/widget/trail/') + '?u=i&sh=veyeff';
+                            }
+                            const iframe = document.getElementById('alltrailsIframe');
+                            const embedContainer = document.getElementById('alltrailsEmbed');
 
-            // Try markdown format: [text](url)
-            const markdownMatch = recommendationText.match(/\[([^\]]+)\]\((https?:\/\/[^)]+alltrails\.com[^)]+)\)/);
-            if (markdownMatch) {
-                alltrailsUrl = markdownMatch[2];
-            } else {
-                // Try plain URL format: **AllTrails Link**: https://...
-                const plainMatch = recommendationText.match(/AllTrails Link[:\s]*(https?:\/\/[^\s\n]+alltrails\.com[^\s\n]+)/i);
-                if (plainMatch) {
-                    alltrailsUrl = plainMatch[1];
-                }
-            }
-
-            // If we found a URL, load it immediately (same as other matches)
-            if (alltrailsUrl) {
-                // Transform URL from /trail/ to /widget/trail/ and add query parameters
-                const embedUrl = alltrailsUrl.replace('/trail/', '/widget/trail/');
-                const iframe = document.getElementById('alltrailsIframe');
-                const embedContainer = document.getElementById('alltrailsEmbed');
-
-                // Load the iframe immediately
-                iframe.src = embedUrl;
-                embedContainer.classList.remove('hidden');
+                            // Load the iframe
+                            iframe.src = url;
+                            embedContainer.classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => console.error('Error fetching trail URL:', err));
             }
         }
 
