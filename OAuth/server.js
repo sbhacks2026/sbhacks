@@ -273,6 +273,11 @@ app.get('/callback', (req, res) => {
     res.sendFile(path.join(__dirname, 'callback.html'));
 });
 
+// // Serve results page
+// app.get('/results', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'results.html'));
+// });
+
 // Serve index page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
