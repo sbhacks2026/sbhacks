@@ -59,7 +59,7 @@ When reviewing my activity data:
 
 ## Trail Recommendation Format
 
-Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_distance} miles driving distance from {current_location}.
+Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_distance} hours of driving from {current_location}.
 
 Format your response as follows:
 
