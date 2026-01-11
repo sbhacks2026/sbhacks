@@ -101,17 +101,17 @@
 
     <script>
         function loginWithStrava() {
-            // Get client ID from server
+            // Get client ID from server (gets next key in rotation)
             fetch('/auth/config')
                 .then(response => response.json())
                 .then(config => {
                     const clientId = config.clientId;
                     const redirectUri = config.redirectUri;
                     const scope = 'read,activity:read_all'; // Adjust scopes as needed
-                    
-                    // Construct the authorization URL
-                    const authUrl = `https://www.strava.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
-                    
+
+                    // Pass clientId in the state parameter so callback knows which key was used
+                    const authUrl = `https://www.strava.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${clientId}`;
+
                     // Redirect to Strava
                     window.location.href = authUrl;
                 })
