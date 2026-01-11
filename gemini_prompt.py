@@ -1,5 +1,6 @@
 from google import genai
 import json
+import os
 
 # Enter Gemini API key below
 with open('key.json', 'r', encoding='utf-8') as key_file:
@@ -54,7 +55,10 @@ Please recommend ONE backpacking trail and format your response as follows:
 - If my activity history suggests I'm not ready for multi-day backpacking, recommend a challenging day hike instead and explain why
 """
 
-client = genai.Client()
+# Uncomment below when pushing for website demo
+# user_key = os.environ.get('GEMINI_API_KEY')
+
+client = genai.Client(api_key = user_key)
 
 response = client.models.generate_content(
     model="gemini-2.5-flash",
