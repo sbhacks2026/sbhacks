@@ -24,7 +24,6 @@ class Activity:
 
     def to_dict(self):
         return {
-            "id": self.id,
             "days_ago": self.get_days_ago(),
             "distance (miles)": int(self.distance / 1609.34),
             "total_elevation_gain (feet)": int(self.elevation * 3.28084),
