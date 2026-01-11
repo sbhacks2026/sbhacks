@@ -343,8 +343,7 @@ app.get('/api/recommendation', async (req, res) => {
                     // Call search_trail.py to find the AllTrails link
                     const searchPython = spawn('python3', [
                         'search_trail.py',
-                        trailName,
-                        preferences.city || ''
+                        trailName
                     ]);
 
                     let searchResult = '';
@@ -484,4 +483,5 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log(`Make sure to set your Strava callback URL to: ${process.env.CALLBACK_URL || `http://localhost:${PORT}/callback`}`);
 });
+
 
