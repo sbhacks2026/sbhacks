@@ -405,13 +405,15 @@
             const linkMatch = recommendationText.match(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/);
             if (linkMatch) {
                 const alltrailsUrl = linkMatch[2];
+                // Transform URL from /trail/ to /widget/trail/ and add query parameters
+                const embedUrl = alltrailsUrl.replace('/trail/', '/widget/trail/') + '?u=i&sh=6sjn4r';
                 const loadBtn = document.getElementById('loadAlltrailsBtn');
                 const embedContainer = document.getElementById('alltrailsEmbed');
                 const iframe = document.getElementById('alltrailsIframe');
 
                 loadBtn.addEventListener('click', () => {
-                    // Load the iframe
-                    iframe.src = alltrailsUrl;
+                    // Load the iframe with transformed URL
+                    iframe.src = embedUrl;
                     // Hide button and show iframe
                     loadBtn.style.display = 'none';
                     embedContainer.classList.remove('hidden');
