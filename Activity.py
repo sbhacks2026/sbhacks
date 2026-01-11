@@ -23,7 +23,6 @@ class Activity:
 
     def to_dict(self):
         return {
-            "name ": self.name,
             "id": self.id,
             "start_date": self.date,
             "distance (miles)": self.get_distance_in_miles(),
