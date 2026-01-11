@@ -322,6 +322,50 @@ app.get('/api/recommendation', async (req, res) => {
     }
 });
 
+// Raw Gemini output endpoint (for testing)
+app.get('/api/raw-recommendation', async (req, res) => {
+    // Check if this user has a session with activities
+    if (!req.session.user || !req.session.user.activities) {
+        return res.status(401).send('Not authenticated. Please log in first.');
+    }
+
+    try {
+        // Pass stored activities to Python gemini_prompt.py (as JSON string)
+        const activitiesJson = JSON.stringify(req.session.user.activities);
+
+        const python = spawn('python3', [
+            '../gemini_prompt.py',
+            activitiesJson
+        ]);
+
+        let result = '';
+        let errorOutput = '';
+
+        python.stdout.on('data', (data) => {
+            result += data.toString();
+        });
+
+        python.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+
+        python.on('close', (code) => {
+            if (code !== 0) {
+                console.error('❌ Python error:', errorOutput);
+                return res.status(500).send(`Error: ${errorOutput}`);
+            }
+
+            // Return raw text output
+            res.setHeader('Content-Type', 'text/plain');
+            res.send(result);
+        });
+
+    } catch (error) {
+        console.error('Error running gemini_prompt.py:', error.message);
+        res.status(500).send(`Error: ${error.message}`);
+    }
+});
+
 // Serve results page
 app.get('/results', (req, res) => {
     res.sendFile(path.join(__dirname, 'results.html'));
