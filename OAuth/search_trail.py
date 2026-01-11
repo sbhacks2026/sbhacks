@@ -9,7 +9,6 @@ def search_trail(trail_name):
 
     Args:
         trail_name: The name of the trail to search for
-        location: Optional location context
 
     Returns:
         JSON string with the first organic result link
@@ -17,13 +16,14 @@ def search_trail(trail_name):
     # Build search query
     search_query = f"site:alltrails.com/trail/ {trail_name}"
 
+
     params = {
         "engine": "google",
         "q": search_query,
         "google_domain": "google.com",
         "hl": "en",
         "gl": "us",
-        "api_key": os.environ.get("GOOGLE_SEARCH_KEY")
+        "api_key": os.environ.get('GOOGLE_SEARCH_KEY')
     }
 
     search = GoogleSearch(params)
