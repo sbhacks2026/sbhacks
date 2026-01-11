@@ -54,7 +54,7 @@ Please recommend ONE backpacking trail and format your response as follows:
 - If my activity history suggests I'm not ready for multi-day backpacking, recommend a challenging day hike instead and explain why
 """
 
-client = genai.Client(api_key=user_key)
+client = genai.Client()
 
 response = client.models.generate_content(
     model="gemini-2.5-flash",
