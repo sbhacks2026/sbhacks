@@ -21,11 +21,7 @@ if len(sys.argv) > 1:
     # User preferences (with defaults if not provided)
     month_of_trip = sys.argv[2] if len(sys.argv) > 2 else "July"
     current_location = sys.argv[3] if len(sys.argv) > 3 else "Santa Barbara, CA"
-<<<<<<< Updated upstream
     driving_hours = sys.argv[4] if len(sys.argv) > 4 else "1"
-=======
-    driving_hours = sys.argv[4] if len(sys.argv) > 4 else "2"
->>>>>>> Stashed changes
     difficulty = sys.argv[5] if len(sys.argv) > 5 else "Moderate"
     desired_location = sys.argv[6] if len(sys.argv) > 6 else ""
 else:
@@ -36,11 +32,7 @@ else:
     # Default values for local testing
     month_of_trip = "July"
     current_location = "Santa Barbara, CA"
-<<<<<<< Updated upstream
     driving_hours = "1"
-=======
-    driving_hours = "2"
->>>>>>> Stashed changes
     difficulty = "Moderate"
     desired_location = ""
 
