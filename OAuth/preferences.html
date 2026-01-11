@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trail Preferences - TrailForge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fc4c02 0%, #e04402 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #fc4c02;
+        }
+
+        .submit-button {
+            width: 100%;
+            background: #fc4c02;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(252, 76, 2, 0.3);
+        }
+
+        .submit-button:hover {
+            background: #e04402;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(252, 76, 2, 0.4);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .helper-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏔️ Customize Your Trail</h1>
+            <p>Tell us about your preferences</p>
+        </div>
+
+        <div class="form-container">
+            <form id="preferencesForm">
+                <div class="form-group">
+                    <label for="month">What month do you plan to hike in?</label>
+                    <select id="month" name="month" required>
+                        <option value="">Select a month</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July" selected>July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">What city do you currently live in?</label>
+                    <input type="text" id="city" name="city" placeholder="e.g., Santa Barbara, CA" required>
+                    <p class="helper-text">This helps us find trails near you</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="drivingDistance">How far are you willing to drive? (miles)</label>
+                    <input type="number" id="drivingDistance" name="drivingDistance" placeholder="e.g., 100" min="0" max="1000" required>
+                    <p class="helper-text">Maximum driving distance in miles</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty">What is your desired difficulty?</label>
+                    <select id="difficulty" name="difficulty" required>
+                        <option value="">Select difficulty</option>
+                        <option value="Easy">Easy - Casual day hikes</option>
+                        <option value="Moderate">Moderate - Some challenge</option>
+                        <option value="Strenuous">Strenuous - Challenging terrain</option>
+                        <option value="Very Strenuous">Very Strenuous - Expert level</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-button">
+                    Get My Trail Recommendation →
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('preferencesForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                month: document.getElementById('month').value,
+                city: document.getElementById('city').value,
+                drivingDistance: document.getElementById('drivingDistance').value,
+                difficulty: document.getElementById('difficulty').value
+            };
+
+            try {
+                // Save preferences to session
+                const response = await fetch('/api/preferences', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    // Redirect to results page
+                    window.location.href = '/results';
+                } else {
+                    alert('Error saving preferences. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error saving preferences. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

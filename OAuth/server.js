@@ -282,15 +282,27 @@ app.get('/api/recommendation', async (req, res) => {
 
 
     try {
+        // Get user preferences (with defaults)
+        const preferences = req.session.user.preferences || {
+            month: 'July',
+            city: 'Santa Barbara, CA',
+            drivingDistance: '100',
+            difficulty: 'Moderate'
+        };
+
         // Pass stored activities to Python gemini_prompt.py (as JSON string)
         const activitiesJson = JSON.stringify(req.session.user.activities);
 
         console.log(`Passing ${req.session.user.activities.length} activities to gemini_prompt.py`);
-        console.log('First activity sample:', req.session.user.activities[0]);
+        console.log('User preferences:', preferences);
 
         const python = spawn('python3', [
             '../gemini_prompt.py',  // Path relative to OAuth folder
-            activitiesJson  // Pass activities data
+            activitiesJson,  // Pass activities data
+            preferences.month,
+            preferences.city,
+            preferences.drivingDistance,
+            preferences.difficulty
         ]);
 
         let result = '';
@@ -368,6 +380,32 @@ app.get('/api/raw-recommendation', async (req, res) => {
         console.error('Error running gemini_prompt.py:', error.message);
         res.status(500).send(`Error: ${error.message}`);
     }
+});
+
+// Save user preferences
+app.post('/api/preferences', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    const { month, city, drivingDistance, difficulty } = req.body;
+
+    // Store preferences in session
+    req.session.user.preferences = {
+        month: month || 'July',
+        city: city || 'Santa Barbara, CA',
+        drivingDistance: drivingDistance || '100',
+        difficulty: difficulty || 'Moderate'
+    };
+
+    console.log('✅ Saved user preferences:', req.session.user.preferences);
+
+    res.json({ success: true });
+});
+
+// Serve preferences page
+app.get('/preferences', (req, res) => {
+    res.sendFile(path.join(__dirname, 'preferences.html'));
 });
 
 // Serve results page
