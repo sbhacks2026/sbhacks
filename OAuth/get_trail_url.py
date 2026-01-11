@@ -1,17 +1,18 @@
-from google import genai
-import os
 import sys
-
-user_key = os.environ.get('GEMINI_API_KEY')
-client = genai.Client(api_key=user_key)
+try:
+    from ddgs import DDGS
+except ImportError:
+    print("Error: ddgs not installed. Run: pip install ddgs", file=sys.stderr)
+    #sys.exit(1)
 
 if len(sys.argv) > 1:
     trail_name = sys.argv[1]
-    # Prompt Gemini to find the specific URL
-    prompt = f"Find the official AllTrails URL for the trail named '{trail_name}'. Return ONLY the URL, nothing else."
+    query = f"site:alltrails.com {trail_name}"
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-    )
-    print(response.text.strip())
+    # The usage remains mostly the same, just the import changed
+    with DDGS() as ddgs:
+        # max_results controls how many links you get back
+        results = ddgs.text(query, max_results=1)
+        
+        for result in results:
+            print(result['href'])
