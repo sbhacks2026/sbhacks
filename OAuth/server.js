@@ -287,7 +287,10 @@ app.get('/api/recommendation', async (req, res) => {
             month: 'July',
             city: 'Santa Barbara, CA',
             drivingHours: '2',
-            difficulty: 'Moderate'
+            difficulty: 'Moderate',
+            drivingHours: '2',
+            difficulty: 'Moderate',
+            desiredLocation: ''
         };
 
         // Pass stored activities to Python gemini_prompt.py (as JSON string)
@@ -302,7 +305,10 @@ app.get('/api/recommendation', async (req, res) => {
             preferences.month,
             preferences.city,
             preferences.drivingHours,
-            preferences.difficulty
+            preferences.difficulty,
+            preferences.drivingHours,
+            preferences.difficulty,
+            preferences.desiredLocation || ''
         ]);
 
         let result = '';
@@ -388,7 +394,7 @@ app.post('/api/preferences', (req, res) => {
         return res.status(401).json({ error: 'Not authenticated' });
     }
 
-    const { month, city, drivingHours, difficulty } = req.body;
+    const { month, city, drivingHours, difficulty, desiredLocation } = req.body;
 
     // Store preferences in session
     req.session.user.preferences = {
@@ -396,6 +402,9 @@ app.post('/api/preferences', (req, res) => {
         city: city || 'Santa Barbara, CA',
         drivingHours: drivingHours || '2',
         difficulty: difficulty || 'Moderate'
+        drivingHours: drivingHours || '2',
+        difficulty: difficulty || 'Moderate',
+        desiredLocation: desiredLocation || ''
     };
 
     console.log('Saved user preferences:', req.session.user.preferences);

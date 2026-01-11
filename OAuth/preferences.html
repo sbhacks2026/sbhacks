@@ -197,6 +197,12 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="desiredLocation">Do you have a specific location in mind? (Optional)</label>
+                    <input type="text" id="desiredLocation" name="desiredLocation" placeholder="e.g., Yosemite, Sierra Nevada">
+                    <p class="helper-text">Leave blank for recommendations near your current city</p>
+                </div>
+
                 <button type="submit" class="submit-button">
                     Get My Trail Recommendation →
                 </button>
@@ -211,8 +217,9 @@
             const formData = {
                 month: document.getElementById('month').value,
                 city: document.getElementById('city').value,
-                drivingDistance: document.getElementById('drivingDistance').value,
-                difficulty: document.getElementById('difficulty').value
+                drivingHours: document.getElementById('drivingDistance').value,
+                difficulty: document.getElementById('difficulty').value,
+                desiredLocation: document.getElementById('desiredLocation').value
             };
 
             try {

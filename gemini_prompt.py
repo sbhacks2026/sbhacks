@@ -23,6 +23,7 @@ if len(sys.argv) > 1:
     current_location = sys.argv[3] if len(sys.argv) > 3 else "Santa Barbara, CA"
     driving_hours = sys.argv[4] if len(sys.argv) > 4 else "1"
     difficulty = sys.argv[5] if len(sys.argv) > 5 else "Moderate"
+    desired_location = sys.argv[6] if len(sys.argv) > 6 else ""
 else:
     # Fallback: Reads strava_data.json file for local testing
     with open('strava_data.json', 'r', encoding='utf-8') as file:
@@ -33,6 +34,7 @@ else:
     current_location = "Santa Barbara, CA"
     driving_hours = "1"
     difficulty = "Moderate"
+    desired_location = ""
 
 # Prompt to submit to Gemini
 prompt = f"""
@@ -60,6 +62,7 @@ When reviewing my activity data:
 ## Trail Recommendation Format
 
 Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_hours} hours driving distance from {current_location}.
+In addition, if there is a valid location submitted here: {desired_location}, (not just blank space between the colon and the comma) find hikes in that area within {driving_hours} hours driving distance.
 
 Format your response as follows:
 
