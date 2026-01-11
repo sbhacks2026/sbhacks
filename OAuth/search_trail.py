@@ -16,6 +16,8 @@ def search_trail(trail_name):
     """
     # Build search query
     search_query = f"site:alltrails.com/trail/ {trail_name}"
+    if location:
+        search_query += f" {location}"
 
     params = {
         "engine": "google",
