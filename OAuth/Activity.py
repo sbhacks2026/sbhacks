@@ -11,7 +11,7 @@ class Activity:
         self.avg_speed = get_activity_output.get("average_speed")
         self.elapsed_time = get_activity_output.get("elapsed_time")
         self.location = get_activity_output.get("start_latlng")
-        self.elev_low = get_activity_output.t("elev_low")
+        self.elev_low = get_activity_output.get("elev_low")
         self.elev_high = get_activity_output.get("elev_high")
 
     def __str__(self):
