@@ -356,7 +356,7 @@
                 document.getElementById('trailName').textContent = trailNameMatch[1];
             }
 
-            // Extract trail stats - remove **:, ~, and extra formatting
+            // Extract trail stats 
             const distanceMatch = recommendationText.match(/Distance[:\s]*~?([^\n]+)/);
             const elevationMatch = recommendationText.match(/Elevation Gain[:\s]*~?([^\n]+)/);
             const difficultyMatch = recommendationText.match(/Difficulty[:\s]*([^\n]+)/);
