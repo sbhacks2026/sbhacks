@@ -14,7 +14,7 @@ def search_trail(trail_name, location=""):
         JSON string with the first organic result link
     """
     # Build search query
-    search_query = f"{trail_name} AllTrails"
+    search_query = f"site:alltrails.com/trail/ {trail_name}"
     if location:
         search_query += f" {location}"
 
