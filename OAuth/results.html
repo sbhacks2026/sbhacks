@@ -398,8 +398,33 @@
                 document.getElementById('weatherInfo').textContent = weatherMatch[1].trim();
             }
 
-            // AllTrails link will be loaded from SerpAPI search results only
-            // (handled in the fetch response callback below)
+            // Extract AllTrails link - try multiple formats
+            let alltrailsUrl = null;
+    
+
+            // Try markdown format: [text](url)
+            const markdownMatch = recommendationText.match(/\[([^\]]+)\]\((https?:\/\/[^)]+alltrails\.com[^)]+)\)/);
+            if (markdownMatch) {
+                alltrailsUrl = markdownMatch[2];
+            } else {
+                // Try plain URL format: **AllTrails Link**: https://...
+                const plainMatch = recommendationText.match(/AllTrails Link[:\s]*(https?:\/\/[^\s\n]+alltrails\.com[^\s\n]+)/i);
+                if (plainMatch) {
+                    alltrailsUrl = plainMatch[1];
+                }
+            }
+
+            // If we found a URL, load it immediately (same as other matches)
+            if (alltrailsUrl) {
+                // Transform URL from /trail/ to /widget/trail/ and add query parameters
+                const embedUrl = alltrailsUrl.replace('/trail/', '/widget/trail/');
+                const iframe = document.getElementById('alltrailsIframe');
+                const embedContainer = document.getElementById('alltrailsEmbed');
+
+                // Load the iframe immediately
+                iframe.src = embedUrl;
+                embedContainer.classList.remove('hidden');
+            }
         }
 
         // Call the function when page loads
