@@ -11,7 +11,11 @@ class StravaApp:
         request_url = f'https://www.strava.com/api/v3/athlete/activities'
         header = {"Authorization" : "Bearer " + self.token}
 
-        result = requests.get(request_url, headers=header).json()
+        response = requests.get(request_url, headers=header)
+        if response.status_code != 200:
+            return Activity.ActivityContainer([])
+
+        result = response.json()
 
         target_sports = {"Run", "Hike", "TrailRun"} # filter to only backpacking related things
 
