@@ -401,7 +401,7 @@ app.post('/api/preferences', (req, res) => {
         month: month || 'July',
         city: city || 'Santa Barbara, CA',
         drivingHours: drivingHours || '2',
-        difficulty: difficulty || 'Moderate'
+        difficulty: difficulty || 'Moderate',
         drivingHours: drivingHours || '2',
         difficulty: difficulty || 'Moderate',
         desiredLocation: desiredLocation || ''
