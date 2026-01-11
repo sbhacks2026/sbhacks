@@ -259,6 +259,15 @@
             padding: 0 20px;
         }
 
+        .strava-logo-footer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 13px;
+            height: auto;
+            z-index: 100;
+        }
+
         @media (max-width: 768px) {
             .content {
                 padding: 25px;
@@ -337,6 +346,8 @@
         </div>
     </div>
 
+    <img src="api_logo_pwrdBy_strava_horiz_white.png" alt="Powered by Strava" class="strava-logo-footer">
+
     <script>
         // This function will parse and display the recommendation text
         function displayRecommendation(recommendationText) {
@@ -373,7 +384,7 @@
             let permitStatus = "No";
             if (permitMatch) {
                 const permitText = cleanStatValue(permitMatch[1]).toLowerCase();
-                permitStatus = (permitText.includes('yes') || permitText.includes('required')) ? "Yes" : "No";
+                permitStatus = (permitText.includes('yes') || permitText.includes('is required')) ? "Yes" : "No";
             }
 
             const statsHTML = `

@@ -129,6 +129,15 @@
             margin-top: 5px;
         }
 
+        .strava-logo-footer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 13px;
+            height: auto;
+            z-index: 100;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.5em;
@@ -208,6 +217,8 @@
             </form>
         </div>
     </div>
+
+    <img src="api_logo_pwrdBy_strava_horiz_white.png" alt="Powered by Strava" class="strava-logo-footer">
 
     <script>
         document.getElementById('preferencesForm').addEventListener('submit', async (e) => {

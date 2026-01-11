@@ -53,33 +53,34 @@
         }
         
         .strava-button {
-            background-color: #fc4c02;
-            color: white;
-            padding: 15px 30px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
+            background: none;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: background-color 0.3s;
+            padding: 0;
+            transition: opacity 0.3s;
         }
 
         .strava-button img {
-            height: 24px;
+            height: auto;
             width: auto;
+            display: block;
         }
-        
+
         .strava-button:hover {
-            background-color: #e04402;
+            opacity: 0.8;
         }
-        
+
         .strava-button:active {
             transform: scale(0.98);
+        }
+
+        .strava-logo-footer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 13px;
+            height: auto;
+            z-index: 100;
         }
     </style>
 </head>
@@ -94,10 +95,11 @@
         <h1>Welcome to TrailForge</h1>
         <p>Connect your Strava account to get personallized trail planning insights</p>
         <button class="strava-button" onclick="loginWithStrava()">
-            <img src="strava_logo.svg" alt="Strava Logo">
-            Login with Strava
+            <img src="btn_strava_connect_with_orange.png" alt="Connect with Strava">
         </button>
     </div>
+
+    <img src="api_logo_pwrdBy_strava_horiz_white.png" alt="Powered by Strava" class="strava-logo-footer">
 
     <script>
         function loginWithStrava() {
