@@ -286,7 +286,7 @@ app.get('/api/recommendation', async (req, res) => {
         const preferences = req.session.user.preferences || {
             month: 'July',
             city: 'Santa Barbara, CA',
-            drivingDistance: '100',
+            drivingHours: '2',
             difficulty: 'Moderate'
         };
 
@@ -301,7 +301,7 @@ app.get('/api/recommendation', async (req, res) => {
             activitiesJson,  // Pass activities data
             preferences.month,
             preferences.city,
-            preferences.drivingDistance,
+            preferences.drivingHours,
             preferences.difficulty
         ]);
 
@@ -388,13 +388,13 @@ app.post('/api/preferences', (req, res) => {
         return res.status(401).json({ error: 'Not authenticated' });
     }
 
-    const { month, city, drivingDistance, difficulty } = req.body;
+    const { month, city, drivingHours, difficulty } = req.body;
 
     // Store preferences in session
     req.session.user.preferences = {
         month: month || 'July',
         city: city || 'Santa Barbara, CA',
-        drivingDistance: drivingDistance || '100',
+        drivingHours: drivingHours || '2',
         difficulty: difficulty || 'Moderate'
     };
 
