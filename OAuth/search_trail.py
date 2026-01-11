@@ -3,7 +3,7 @@ import sys
 import json
 import os
 
-def search_trail(trail_name, user_key):
+def search_trail(trail_name):
     """
     Search for a trail on Google and return the first AllTrails link.
 
@@ -23,7 +23,7 @@ def search_trail(trail_name, user_key):
         "google_domain": "google.com",
         "hl": "en",
         "gl": "us",
-        "api_key": user_key
+        "api_key": os.environ.get('GOOGLE_SEARCH_KEY')
     }
 
     search = GoogleSearch(params)
@@ -52,7 +52,4 @@ if __name__ == "__main__":
 
     trail_name = sys.argv[1]
 
-    user_key = os.environ.get('GGOOGLE_SEARCH_KEY')
-
-
-    print(search_trail(trail_name, user_key))
+    print(search_trail(trail_name))
