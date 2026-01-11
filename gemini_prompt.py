@@ -16,44 +16,36 @@ with open('strava_data.json', 'r', encoding='utf-8') as file:
 
 # Prompt to submit to Gemini
 prompt = f"""
-I'm trying to plan a backpacking trip in {month_of_trip} and I'm looking for a trail. 
-In order to tailor your search to my preferences, I will provide 
-you with a list of my most recent activities along with some 
-statistics for them in a json file. 
+You are an expert outdoor guide and trip planner.
 
-Here are my activities in order in the json: 
-{recent_activities_json}
-    Note: 
-        - Mostly ignore the name of the activities and the id
-        - Record the general location of the lat/lng coordinates
-        to understand where the user might be currently located
-        based off of repeating locations so you can suggest
-        nearby backpacking trail, as well as one that is in a 
-        new unexplored area
-        - Give hike activities a stronger weight when trying to
-        predict/recommend a good backpacking trail, while using
-        runs and other activities as less important more general
-        predictors for overall fitness.
+I am planning a backpacking trip in {month_of_trip}. 
+To tailor the recommendation to my capabilities, please analyze my recent activity history provided below.
 
-Based on my recent activities, return a suggested backpacking trail
-showing me: 
-    - the title at the top in bold
-    - the distance in miles
-    - elevation gain in feet 
-    - a difficulty rating 
-    - whether it's out & back or a loop
-    - a quick summary of what to expect on the trail
+<activity_history>
+{json.dumps(recent_activities_json, indent=2)}
+</activity_history>
 
-When returning the suggested trail, tell me how many days/nights
-you think it will take. 
+Analysis Instructions:
+1. **Location**: Identify my general "home base" from the coordinates to suggest nearby trails vs. destination trails.
+2. **Fitness Level**: 
+   - Prioritize 'Hike' activities to judge my comfort with distance and elevation gain.
+   - Use 'Run' and other activities as secondary indicators of general cardio fitness.
+   - Ignore specific activity names or IDs.
 
-Also, search for a weather forecast in the area for {month_of_trip}, 
-and if it's too early for a forecast, predict what the weather might 
-look like in {month_of_trip} based on previous years. Return this 
-in a very brief statement of what conditions to expect.
+Based on this analysis, please recommend **two** distinct backpacking options:
+1. **The Local Option**: A great trail within a few hours of my calculated location.
+2. **The Destination Option**: A highly-rated trail in a new, exciting area suitable for {month_of_trip}.
 
-At the end, inlcude the link to the hike/trail on the AllTrails
-website.
+For EACH option, provide the following details in Markdown:
+*   **Trail Name** (Bold)
+*   **Location** (Region/State)
+*   **Distance & Elevation**: Total miles and feet of gain.
+*   **Difficulty Rating**: Explain *why* it fits my fitness level (e.g., "Challenging but doable based on your recent 11-mile hike...").
+*   **Route Type**: (Loop / Out & Back).
+*   **Itinerary**: Suggested Days/Nights.
+*   **Summary**: What to expect (scenery, terrain).
+*   **Weather**: Expected conditions for {month_of_trip} (historical averages).
+*   **Link**: AllTrails website link.
 """
 
 client = genai.Client(api_key=user_key)
@@ -65,4 +57,3 @@ response = client.models.generate_content(
 
 # Return ouptut
 print(response.text)
-
