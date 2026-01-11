@@ -165,14 +165,11 @@ app.post('/auth/token', async (req, res) => {
 
         // NOW deauthorize (we already have the data we need)
         try {
-            const deauthResponse = await axios.post(`https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`);
+            await axios.post(`https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`);
             console.log('✅ Deauthorized user - slot freed for next person!');
-            console.log('✅ Deauth response:', deauthResponse.data);
-            console.log('✅ Deauth status:', deauthResponse.status);
         } catch (deauthError) {
             console.error('⚠️ Error deauthorizing:', deauthError.message);
             console.error('⚠️ Full error:', deauthError.response?.data);
-            console.error('⚠️ Status:', deauthError.response?.status);
             // Continue anyway
         }
 
