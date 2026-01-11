@@ -104,12 +104,11 @@ app.post('/auth/token', async (req, res) => {
         
         // NOW deauthorize (we already have the data we need)
         try {
-            await axios.post('https://www.strava.com/oauth/deauthorize', null, {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            });
+            await axios.post(`https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`);
             console.log('✅ Deauthorized user - slot freed for next person!');
         } catch (deauthError) {
             console.error('⚠️ Error deauthorizing:', deauthError.message);
+            console.error('⚠️ Full error:', deauthError.response?.data);
             // Continue anyway
         }
         
@@ -249,11 +248,7 @@ app.post('/auth/logout', async (req, res) => {
     if (req.session.user && req.session.user.access_token) {
         try {
             // Deauthorize with Strava
-            await axios.post('https://www.strava.com/oauth/deauthorize', null, {
-                headers: {
-                    'Authorization': `Bearer ${req.session.user.access_token}`
-                }
-            });
+            await axios.post(`https://www.strava.com/oauth/deauthorize?access_token=${req.session.user.access_token}`);
         } catch (error) {
             console.log('Error deauthorizing:', error.message);
         }
