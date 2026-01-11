@@ -21,7 +21,7 @@ if len(sys.argv) > 1:
     # User preferences (with defaults if not provided)
     month_of_trip = sys.argv[2] if len(sys.argv) > 2 else "July"
     current_location = sys.argv[3] if len(sys.argv) > 3 else "Santa Barbara, CA"
-    driving_hours = sys.argv[4] if len(sys.argv) > 4 else "1"
+    driving_hours = sys.argv[4] if len(sys.argv) > 4 else "2"
     difficulty = sys.argv[5] if len(sys.argv) > 5 else "Moderate"
     desired_location = sys.argv[6] if len(sys.argv) > 6 else ""
 else:
@@ -32,7 +32,7 @@ else:
     # Default values for local testing
     month_of_trip = "July"
     current_location = "Santa Barbara, CA"
-    driving_hours = "1"
+    driving_hours = "2"
     difficulty = "Moderate"
     desired_location = ""
 
@@ -44,7 +44,7 @@ I'm planning a backpacking trip in {month_of_trip} and need help finding the rig
 
 - **Current Location**: {current_location}
 - **Willing to Drive**: Up to {driving_hours} hours
-- **Desired Difficulty**: {difficulty}
+- **Desired predicted difficulty based on my skills**: {difficulty}
 - **Trip Month**: {month_of_trip}
 
 ## My Activity Data
@@ -61,8 +61,8 @@ When reviewing my activity data:
 
 ## Trail Recommendation Format
 
-Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_hours} hours driving distance from {current_location}.
-In addition, if there is a valid location submitted here: {desired_location}, (not just blank space between the colon and the comma) find hikes in that area within {driving_hours} hours driving distance.
+Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference adjusted for my ability as seen in the activity data, and is within {driving_hours} hours driving distance from {current_location}.
+In addition, if there is a valid location submitted here: {desired_location}, (not just blank space between the colon and the comma) find hikes in that area within {driving_hours} hours driving distance from {desired_location} instead of {current_location}.
 
 Format your response as follows:
 
@@ -72,7 +72,7 @@ Format your response as follows:
 - **Difficulty**: [Easy/Moderate/Strenuous]
 - **Trail Type**: [Loop/Out & Back/Point-to-Point]
 - **Recommended Duration**: X days / X nights
-- **Permit Required**: [Yes/No]
+- **Permit Required**: [Yes/No] (In a separate paragraph)
 
 **Trail Summary**: [2-3 sentences describing terrain, scenery, highlights, and what to expect. If a permit is required, briefly explain how to obtain it and any lottery/reservation system details]
 
@@ -83,7 +83,7 @@ Format your response as follows:
 ## Additional Notes
 - Focus the recommendation on a single, well-matched trail rather than multiple options
 - Consider seasonal factors (snow, heat, water availability) when suggesting timing
-- If my activity history suggests I'm not ready for multi-day backpacking, recommend a challenging day hike instead and explain why
+- If my activity history suggests I'm not ready for multi-day backpacking, recommend a challenging day hike or easy one night instead and explain why
 """
 
 client = genai.Client(api_key = user_key)
