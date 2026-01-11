@@ -5,13 +5,13 @@ import sys
 
 
 # Uncomment below when pushing for website demo
-# user_key = os.environ.get('GEMINI_API_KEY')
+user_key = os.environ.get('GEMINI_API_KEY')
 
 
-# Enter Gemini API key below
-with open('key.json', 'r', encoding='utf-8') as key_file:
-    key_dict = json.load(key_file)
-    user_key = key_dict['user_key']
+# # Enter Gemini API key below
+# with open('key.json', 'r', encoding='utf-8') as key_file:
+#     key_dict = json.load(key_file)
+#     user_key = key_dict['user_key']
 
 # Example we will input from Strava
 month_of_trip = "July" # change to user input
