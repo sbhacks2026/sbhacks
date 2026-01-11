@@ -7,6 +7,53 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// API Key Rotation System
+class APIKeyRotator {
+    constructor() {
+        this.keys = [];
+        this.currentIndex = 0;
+
+        // Load all available API key sets from environment variables
+        for (let i = 1; i <= 4; i++) {
+            const clientId = process.env[`STRAVA_CLIENT_ID_${i}`];
+            const clientSecret = process.env[`STRAVA_CLIENT_SECRET_${i}`];
+
+            if (clientId && clientSecret) {
+                this.keys.push({
+                    clientId,
+                    clientSecret,
+                    index: i
+                });
+            }
+        }
+
+        // Fallback to original env vars if no numbered keys found
+        if (this.keys.length === 0 && process.env.STRAVA_CLIENT_ID && process.env.STRAVA_CLIENT_SECRET) {
+            this.keys.push({
+                clientId: process.env.STRAVA_CLIENT_ID,
+                clientSecret: process.env.STRAVA_CLIENT_SECRET,
+                index: 0
+            });
+        }
+
+        console.log(`🔑 Loaded ${this.keys.length} API key set(s)`);
+    }
+
+    getNextKey() {
+        if (this.keys.length === 0) {
+            throw new Error('No API keys configured');
+        }
+
+        const key = this.keys[this.currentIndex];
+        this.currentIndex = (this.currentIndex + 1) % this.keys.length;
+
+        console.log(`🔄 Using API key set #${key.index} (${this.currentIndex}/${this.keys.length} in rotation)`);
+        return key;
+    }
+}
+
+const apiKeyRotator = new APIKeyRotator();
+
 // Middleware
 app.use(express.json());
 app.use(express.static(__dirname));
@@ -24,8 +71,9 @@ app.use(session({
 
 // Configuration endpoint
 app.get('/auth/config', (req, res) => {
+    const currentKey = apiKeyRotator.getNextKey();
     res.json({
-        clientId: process.env.STRAVA_CLIENT_ID,
+        clientId: currentKey.clientId,
         redirectUri: process.env.CALLBACK_URL || `http://localhost:${PORT}/callback`
     });
 });
@@ -33,17 +81,22 @@ app.get('/auth/config', (req, res) => {
 const { spawn } = require('child_process');
 
 app.post('/auth/token', async (req, res) => {
-    const { code } = req.body;
+    const { code, clientId } = req.body;
 
     if (!code) {
         return res.status(400).json({ error: 'Authorization code is required' });
     }
 
     try {
+        // Find the matching API key set based on the clientId sent from frontend
+        const keySet = apiKeyRotator.keys.find(k => k.clientId === clientId) || apiKeyRotator.keys[0];
+
+        console.log(`🔐 Exchanging token using API key set #${keySet.index}`);
+
         // Exchange authorization code for access token
         const response = await axios.post('https://www.strava.com/oauth/token', {
-            client_id: process.env.STRAVA_CLIENT_ID,
-            client_secret: process.env.STRAVA_CLIENT_SECRET,
+            client_id: keySet.clientId,
+            client_secret: keySet.clientSecret,
             code: code,
             grant_type: 'authorization_code'
         });
@@ -101,7 +154,15 @@ app.post('/auth/token', async (req, res) => {
             activities: activities,
             expires_at: data.expires_at
         };
-        
+
+        // Save session before destroying it (to ensure data is persisted)
+        await new Promise((resolve, reject) => {
+            req.session.save((err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+
         // NOW deauthorize (we already have the data we need)
         try {
             const deauthResponse = await axios.post(`https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`);
@@ -114,7 +175,7 @@ app.post('/auth/token', async (req, res) => {
             console.error('⚠️ Status:', deauthError.response?.status);
             // Continue anyway
         }
-        
+
         res.json({
             athlete: data.athlete,
             activities_count: activities.length,
@@ -146,9 +207,12 @@ app.post('/auth/refresh', async (req, res) => {
     }
 
     try {
+        // Use the same key rotation for refresh tokens
+        const keySet = apiKeyRotator.getNextKey();
+
         const response = await axios.post('https://www.strava.com/oauth/token', {
-            client_id: process.env.STRAVA_CLIENT_ID,
-            client_secret: process.env.STRAVA_CLIENT_SECRET,
+            client_id: keySet.clientId,
+            client_secret: keySet.clientSecret,
             refresh_token: req.session.user.refresh_token,
             grant_type: 'refresh_token'
         });
