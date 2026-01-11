@@ -320,7 +320,7 @@ app.get('/api/recommendation', async (req, res) => {
             errorOutput += data.toString();
         });
 
-        python.on('close', (code) => {
+        python.on('close', async (code) => {
             if (code !== 0) {
                 console.error('❌ Python error:', errorOutput);
                 return res.status(500).json({
@@ -329,8 +329,62 @@ app.get('/api/recommendation', async (req, res) => {
                 });
             }
 
-            // Return the recommendation text
-            res.json({ recommendation: result.trim() });
+            // Extract trail name from Gemini output
+            const recommendationText = result.trim();
+            const trailNameMatch = recommendationText.match(/\*\*([^*]+)\*\*/);
+
+            let alltrailsLink = null;
+
+            if (trailNameMatch) {
+                const trailName = trailNameMatch[1];
+                console.log(`🔍 Searching for trail: ${trailName}`);
+
+                try {
+                    // Call search_trail.py to find the AllTrails link
+                    const searchPython = spawn('python3', [
+                        'search_trail.py',
+                        trailName,
+                        preferences.city || ''
+                    ]);
+
+                    let searchResult = '';
+                    let searchError = '';
+
+                    searchPython.stdout.on('data', (data) => {
+                        searchResult += data.toString();
+                    });
+
+                    searchPython.stderr.on('data', (data) => {
+                        searchError += data.toString();
+                    });
+
+                    await new Promise((resolve, reject) => {
+                        searchPython.on('close', (searchCode) => {
+                            if (searchCode !== 0) {
+                                console.error('❌ Search error:', searchError);
+                                reject(new Error(searchError));
+                            } else {
+                                resolve();
+                            }
+                        });
+                    });
+
+                    const searchData = JSON.parse(searchResult);
+                    if (searchData.success) {
+                        alltrailsLink = searchData.link;
+                        console.log(`✅ Found AllTrails link: ${alltrailsLink}`);
+                    }
+                } catch (searchErr) {
+                    console.error('⚠️ Error searching for trail:', searchErr.message);
+                    // Continue without the link
+                }
+            }
+
+            // Return the recommendation text and the AllTrails link
+            res.json({
+                recommendation: recommendationText,
+                alltrailsLink: alltrailsLink
+            });
         });
 
     } catch (error) {
