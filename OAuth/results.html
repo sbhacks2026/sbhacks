@@ -285,28 +285,13 @@
             }
         }
 
-        // Example usage - replace this with actual API call
-        // For now, this demonstrates the parsing with your example text
-        const exampleRecommendation = `Based on your activity data, you are a highly fit individual with a strong preference for challenging hikes, including multi-day backpacking. Your recent activities like "Mt. Shasta" (9.55 miles, 5051.84 feet elevation gain), "Zion Narrows Shuttle Service" (13.70 miles, 1655.51 feet), and especially "Calm luh backpack" (11.76 miles, 2035.11 feet) demonstrate excellent endurance, a willingness to tackle significant elevation, and experience with longer, multi-day efforts. Your running data further confirms a high level of general cardiovascular fitness.
-
-For your July backpacking trip, I recommend a classic and strenuous Sierra Nevada experience.
-
-**Rae Lakes Loop**
-- **Distance**: ~41 miles
-- **Elevation Gain**: ~7,800 feet (cumulative)
-- **Difficulty**: Strenuous
-- **Trail Type**: Loop
-- **Recommended Duration**: 4-5 days / 3-4 nights
-
-**Trail Summary**: This iconic loop in Kings Canyon National Park traverses stunning high-alpine landscapes, featuring crystal-clear Rae Lakes nestled among towering granite peaks. Hikers will cross the formidable Glen Pass (11,940 ft), offering panoramic views of the Sierra Nevada, and experience lush river valleys, dense forests, and dramatic granite cirques. Expect varied terrain, from challenging climbs to scenic descents, with abundant opportunities for wildlife viewing and enjoying pristine wilderness. This trail is a quintessential Sierra Nevada backpacking adventure, perfectly suited to your demonstrated fitness and preference for elevation.
-
-**Weather Forecast for July**: In July, the Rae Lakes Loop typically experiences warm, sunny days (often 60s-80s F in valleys, cooler at elevation) and cool to cold nights (30s-50s F). Afternoon thunderstorms are a common occurrence in the Sierra Nevada during summer, so be prepared for rain and potential hail. While major snow will generally have melted from Glen Pass by mid-July, scattered patches may remain, especially on north-facing slopes. Water sources are abundant.
-
-**AllTrails Link**: [https://www.alltrails.com/trail/us/california/rae-lakes-loop](https://www.alltrails.com/trail/us/california/rae-lakes-loop)`;
-
         // Call the function when page loads
         window.addEventListener('DOMContentLoaded', () => {
-            // Fetch recommendation from API
+            // Show loading state
+            document.getElementById('fitnessText').textContent = 'Generating your personalized recommendation...';
+            document.getElementById('trailName').textContent = 'Please wait...';
+
+            // Fetch recommendation from API - this gets response.text from gemini_prompt.py
             fetch('/api/recommendation')
                 .then(response => {
                     if (!response.ok) {
@@ -315,12 +300,13 @@ For your July backpacking trip, I recommend a classic and strenuous Sierra Nevad
                     return response.json();
                 })
                 .then(data => {
+                    // Display the actual Gemini response.text output
                     displayRecommendation(data.recommendation);
                 })
                 .catch(error => {
                     console.error('Error fetching recommendation:', error);
-                    // Fallback to example if API call fails
-                    displayRecommendation(exampleRecommendation);
+                    document.getElementById('fitnessText').textContent = 'Error generating recommendation. Please try again.';
+                    document.getElementById('trailName').textContent = 'Error';
                 });
         });
     </script>
