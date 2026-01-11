@@ -1,7 +1,6 @@
 from serpapi import GoogleSearch
 import sys
 import json
-import os
 
 def search_trail(trail_name):
     """
@@ -9,7 +8,6 @@ def search_trail(trail_name):
 
     Args:
         trail_name: The name of the trail to search for
-        location: Optional location context
 
     Returns:
         JSON string with the first organic result link
@@ -19,13 +17,18 @@ def search_trail(trail_name):
     if location:
         search_query += f" {location}"
 
+
     params = {
         "engine": "google",
         "q": search_query,
         "google_domain": "google.com",
         "hl": "en",
         "gl": "us",
-        "api_key": os.environ.get("GOOGLE_SEARCH_KEY")
+<<<<<<< HEAD
+        "api_key": os.environ.get('GOOGLE_SEARCH_KEY')
+=======
+        "api_key": "975824a675b71dc0d0aeda8a04d37166df2d746599a3cd2fd96b767002400435"
+>>>>>>> parent of 4857b33 (updates)
     }
 
     search = GoogleSearch(params)
