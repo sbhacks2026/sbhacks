@@ -13,22 +13,37 @@ user_key = os.environ.get('GEMINI_API_KEY')
 #     key_dict = json.load(key_file)
 #     user_key = key_dict['user_key']
 
-# Example we will input from Strava
-month_of_trip = "July" # change to user input
-current_location = "Santa Barbara, CA"
-
-# Accept activities as command-line argument from Node.js
+# Accept arguments from Node.js server
 if len(sys.argv) > 1:
     # Activities passed as JSON string from server.js
     recent_activities_json = json.loads(sys.argv[1])
+
+    # User preferences (with defaults if not provided)
+    month_of_trip = sys.argv[2] if len(sys.argv) > 2 else "July"
+    current_location = sys.argv[3] if len(sys.argv) > 3 else "Santa Barbara, CA"
+    driving_distance = sys.argv[4] if len(sys.argv) > 4 else "100"
+    difficulty = sys.argv[5] if len(sys.argv) > 5 else "Moderate"
 else:
     # Fallback: Reads strava_data.json file for local testing
     with open('strava_data.json', 'r', encoding='utf-8') as file:
         recent_activities_json = json.load(file)
 
+    # Default values for local testing
+    month_of_trip = "July"
+    current_location = "Santa Barbara, CA"
+    driving_distance = "100"
+    difficulty = "Moderate"
+
 # Prompt to submit to Gemini
 prompt = f"""
 I'm planning a backpacking trip in {month_of_trip} and need help finding the right trail.
+
+## My Location and Constraints
+
+- **Current Location**: {current_location}
+- **Willing to Drive**: Up to {driving_distance} miles
+- **Desired Difficulty**: {difficulty}
+- **Trip Month**: {month_of_trip}
 
 ## My Activity Data
 
@@ -44,7 +59,9 @@ When reviewing my activity data:
 
 ## Trail Recommendation Format
 
-Please recommend ONE backpacking trail and format your response as follows:
+Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_distance} miles driving distance from {current_location}.
+
+Format your response as follows:
 
 **[Trail Name]**
 - **Distance**: X miles
