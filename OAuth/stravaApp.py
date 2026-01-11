@@ -5,7 +5,7 @@ import sys
 
 class StravaApp:
     def __init__(self, token : str):
-        self.token = token
+        self.token = str(token)
 
     def get_walking_activities(self):
         request_url = f'https://www.strava.com/api/v3/athlete/activities'
