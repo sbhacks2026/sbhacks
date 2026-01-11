@@ -11,7 +11,7 @@ class Activity:
         self.avg_speed = get_activity_output.get("average_speed")
         self.elapsed_time = get_activity_output.get("elapsed_time")
         self.location = get_activity_output.get("start_latlng")
-        self.elev_low = get_activity_output.get("elev_low")
+        self.elev_low = get_activity_output.t("elev_low")
         self.elev_high = get_activity_output.get("elev_high")
 
     def __str__(self):
@@ -116,6 +116,9 @@ class ActivityContainer:
     def to_json(self, filename):
         with open(filename, 'w') as f:
             json.dump([activity.to_dict() for activity in self.activities], f, indent=4)
+
+    def to_dict(self):
+        return [activity.to_dict() for activity in self.activities]
 
     # Things we need:
     # How long ago they did the activity
