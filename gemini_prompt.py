@@ -69,9 +69,9 @@ Format your response as follows:
 - **Difficulty**: [Easy/Moderate/Strenuous]
 - **Trail Type**: [Loop/Out & Back/Point-to-Point]
 - **Recommended Duration**: X days / X nights
-- **Permit Required**: [Yes/No - If yes, briefly explain how to obtain it and any lottery/reservation system details]
+- **Permit Required**: [Yes/No]
 
-**Trail Summary**: [2-3 sentences describing terrain, scenery, highlights, and what to expect]
+**Trail Summary**: [2-3 sentences describing terrain, scenery, highlights, and what to expect. If a permit is required, briefly explain how to obtain it and any lottery/reservation system details]
 
 **Weather Forecast for {month_of_trip}**: [Brief statement about expected conditions. If a specific forecast isn't available, provide typical weather patterns for this location and month based on historical data]
 
