@@ -445,17 +445,6 @@
 
                     // Display the actual Gemini response.text output
                     displayRecommendation(data.recommendation);
-
-                    // If we got an AllTrails link from the search, use it
-                    if (data.alltrailsLink) {
-                        const embedUrl = data.alltrailsLink.replace('/trail/', '/widget/trail/');
-                        const iframe = document.getElementById('alltrailsIframe');
-                        const embedContainer = document.getElementById('alltrailsEmbed');
-
-                        iframe.src = embedUrl;
-                        embedContainer.classList.remove('hidden');
-                        console.log('✅ Loaded AllTrails embed from search:', embedUrl);
-                    }
                 })
                 .catch(error => {
                     console.error('Error fetching recommendation:', error);
