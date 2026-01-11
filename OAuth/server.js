@@ -280,12 +280,19 @@ app.get('/api/recommendation', async (req, res) => {
         return res.status(401).json({ error: 'Not authenticated. Please log in first.' });
     }
 
+
     try {
         // Pass stored activities to Python gemini_prompt.py (as JSON string)
         const activitiesJson = JSON.stringify(req.session.user.activities);
 
-        console.log(`📊 Passing ${req.session.user.activities.length} activities to gemini_prompt.py`);
+        console.log(`Passing ${req.session.user.activities.length} activities to gemini_prompt.py`);
         console.log('First activity sample:', req.session.user.activities[0]);
+
+        console.log("=== USER ACTIVITIES JSON ===");
+        console.log(activitiesJson);
+        console.log("============================");
+
+        res.json({ status: "logged" });
 
         const python = spawn('python3', [
             '../gemini_prompt.py',  // Path relative to OAuth folder
