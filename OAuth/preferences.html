@@ -264,7 +264,7 @@
         // Show first image
         backgroundDivs[0].classList.add('active');
 
-        // Rotate through images every 5 seconds with fade
+        // Rotate through images every 10 seconds with fade
         setInterval(() => {
             // Remove active class from current image
             backgroundDivs[currentImageIndex].classList.remove('active');
@@ -274,7 +274,7 @@
 
             // Add active class to next image
             backgroundDivs[currentImageIndex].classList.add('active');
-        }, 5000);
+        }, 10000);
     </script>
 </body>
 </html>

@@ -13,12 +13,27 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('background.jpg');
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            min-height: 100vh;
-            padding: 20px;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: -1;
+        }
+
+        .background-image.active {
+            opacity: 1;
         }
 
         .container {
@@ -242,6 +257,12 @@
     </style>
 </head>
 <body>
+    <div class="background-image" id="bg1"></div>
+    <div class="background-image" id="bg2"></div>
+    <div class="background-image" id="bg3"></div>
+    <div class="background-image" id="bg4"></div>
+    <div class="background-image" id="bg5"></div>
+
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-spinner"></div>
@@ -384,6 +405,45 @@
                     document.getElementById('trailName').textContent = 'Error';
                 });
         });
+
+        // Background image carousel with fade effect
+        const backgroundDivs = [
+            document.getElementById('bg1'),
+            document.getElementById('bg2'),
+            document.getElementById('bg3'),
+            document.getElementById('bg4'),
+            document.getElementById('bg5')
+        ];
+
+        const images = [
+            'background1.jpeg',
+            'background2.jpeg',
+            'background3.jpeg',
+            'background4.jpeg',
+            'background5.jpeg'
+        ];
+
+        // Set background images for each div
+        backgroundDivs.forEach((div, index) => {
+            div.style.backgroundImage = `url('${images[index]}')`;
+        });
+
+        let currentImageIndex = 0;
+
+        // Show first image
+        backgroundDivs[0].classList.add('active');
+
+        // Rotate through images every 10 seconds with fade
+        setInterval(() => {
+            // Remove active class from current image
+            backgroundDivs[currentImageIndex].classList.remove('active');
+
+            // Move to next image
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+
+            // Add active class to next image
+            backgroundDivs[currentImageIndex].classList.add('active');
+        }, 10000);
     </script>
 </body>
 </html>
