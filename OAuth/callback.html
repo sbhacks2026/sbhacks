@@ -107,25 +107,24 @@
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const error = urlParams.get('error');
-        const state = urlParams.get('state'); // Contains clientId
 
         if (error) {
             showError('Authorization denied: ' + error);
         } else if (code) {
-            // Exchange code for access token, passing the clientId from state
-            exchangeCodeForToken(code, state);
+            // Exchange code for access token
+            exchangeCodeForToken(code);
         } else {
             showError('No authorization code received');
         }
 
-        async function exchangeCodeForToken(code, clientId) {
+        async function exchangeCodeForToken(code) {
             try {
                 const response = await fetch('/auth/token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ code, clientId })
+                    body: JSON.stringify({ code })
                 });
 
                 const data = await response.json();
