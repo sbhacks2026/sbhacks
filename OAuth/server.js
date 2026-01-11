@@ -398,7 +398,7 @@ app.post('/api/preferences', (req, res) => {
         difficulty: difficulty || 'Moderate'
     };
 
-    console.log('✅ Saved user preferences:', req.session.user.preferences);
+    console.log('Saved user preferences:', req.session.user.preferences);
 
     res.json({ success: true });
 });
