@@ -286,8 +286,14 @@ app.get('/api/recommendation', async (req, res) => {
         const preferences = req.session.user.preferences || {
             month: 'July',
             city: 'Santa Barbara, CA',
+<<<<<<< Updated upstream
             drivingDistance: '100',
             difficulty: 'Moderate'
+=======
+            drivingHours: '2',
+            difficulty: 'Moderate',
+            desiredLocation: ''
+>>>>>>> Stashed changes
         };
 
         // Pass stored activities to Python gemini_prompt.py (as JSON string)
@@ -301,8 +307,14 @@ app.get('/api/recommendation', async (req, res) => {
             activitiesJson,  // Pass activities data
             preferences.month,
             preferences.city,
+<<<<<<< Updated upstream
             preferences.drivingDistance,
             preferences.difficulty
+=======
+            preferences.drivingHours,
+            preferences.difficulty,
+            preferences.desiredLocation || ''
+>>>>>>> Stashed changes
         ]);
 
         let result = '';
@@ -388,14 +400,24 @@ app.post('/api/preferences', (req, res) => {
         return res.status(401).json({ error: 'Not authenticated' });
     }
 
+<<<<<<< Updated upstream
     const { month, city, drivingDistance, difficulty } = req.body;
+=======
+    const { month, city, drivingHours, difficulty, desiredLocation } = req.body;
+>>>>>>> Stashed changes
 
     // Store preferences in session
     req.session.user.preferences = {
         month: month || 'July',
         city: city || 'Santa Barbara, CA',
+<<<<<<< Updated upstream
         drivingDistance: drivingDistance || '100',
         difficulty: difficulty || 'Moderate'
+=======
+        drivingHours: drivingHours || '2',
+        difficulty: difficulty || 'Moderate',
+        desiredLocation: desiredLocation || ''
+>>>>>>> Stashed changes
     };
 
     console.log('✅ Saved user preferences:', req.session.user.preferences);

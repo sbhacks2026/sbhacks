@@ -33,6 +33,7 @@ else:
     current_location = "Santa Barbara, CA"
     driving_distance = "100"
     difficulty = "Moderate"
+    desired_location = ""
 
 # Prompt to submit to Gemini
 prompt = f"""
@@ -59,7 +60,12 @@ When reviewing my activity data:
 
 ## Trail Recommendation Format
 
+<<<<<<< Updated upstream
 Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_distance} hours of driving from {current_location}.
+=======
+Please recommend ONE backpacking trail that matches my {difficulty} difficulty preference and is within {driving_hours} hours driving distance from {current_location}.
+In addition, if there is a valid location submitted here: {desired_location}, (not just blank space between the colon and the comma) find hikes in that area within {driving_hours} hours driving distance.
+>>>>>>> Stashed changes
 
 Format your response as follows:
 
