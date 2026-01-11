@@ -131,13 +131,13 @@
             const detailsDiv = document.getElementById('details');
             detailsDiv.innerHTML = `
                 <p class="info">Athlete: ${data.athlete.firstname} ${data.athlete.lastname}</p>
-                <p class="info">Redirecting to route finder...</p>
+                <p class="info">Preparing your personalized recommendation...</p>
             `;
-            
-            // Redirect to results page after 2 seconds
+
+            // Redirect to results page (loading happens there)
             setTimeout(() => {
                 window.location.href = '/results';
-            }, 2000);
+            }, 1000);
         }
 
         function showError(message) {
